@@ -1,5 +1,6 @@
-import NavbarHome from "./components/NavbarHome";
-import CarouselHome from "./components/Carousel";
+import NavbarHome from "../components/NavbarHome";
+import CarouselHome from "../components/Carousel";
+import ImageBanner from "../components/ImageBanner";
         
 import "./../style.css";
 import "./style.css";
