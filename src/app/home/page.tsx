@@ -1,15 +1,65 @@
+import { Button } from "primereact/button";
 import Navbar from "../components/Navbar";
-import CarouselHome from "../components/Carousel";
-import ImageBanner from "../components/ImageBanner";
+import HomeButton from "../components/HomeButton";
+        
         
 import "./../style.css";
 import "./style.css";
+import { link } from "fs";
 
 export default function Homepage(){
+
+    //dados mockados
+    let dados = [
+        {
+            text: "evento",
+            icon: "pi pi-bars",
+            inverted: false,
+            backgroundImage: "/home-1.png",
+            link: "/evento"
+        },
+        {
+            text: "content",
+            icon: "pi pi-arrow-left",
+            inverted: true,
+            backgroundImage: "/home-inverted-1.png",
+            link: "/content"
+        },
+        {
+            text: "evento",
+            icon: "pi pi-bars",
+            inverted: false,
+            backgroundImage: "/home-1.png",
+            link: "/evento"
+        },
+        {
+            text: "content",
+            icon: "pi pi-book",
+            inverted: true,
+            backgroundImage: "/home-inverted-1.png",
+            link: "/content"
+        },
+        {
+            text: "evento",
+            icon: "pi pi-bars",
+            inverted: false,
+            backgroundImage: "/home-1.png",
+            link: "/evento"
+        },
+    ]
+    
+    
     return (
-        <div className="m-0 p-0" style={{margin: 0}}>
+        <div>
             <Navbar isHome={true}></Navbar>
-            <CarouselHome></CarouselHome>
+            <div className="grid gap-4 justify-content-center align-items-center mt-3">
+                {
+                    dados.map((dado, index) => {
+                        return (
+                            <HomeButton key={index} text={dado.text} icon={dado.icon} inverted={dado.inverted} backgroundImage={dado.backgroundImage} link={dado.link}></HomeButton>
+                        )
+                }, dados)}
+            </div>
         </div>
     )
 }
