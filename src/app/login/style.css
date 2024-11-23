@@ -1,31 +1,87 @@
-body{
-    background-color: #2B22BB;
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
     font-family: Arial, Helvetica, sans-serif;
+    overflow: hidden;
+}
+
+body {
+    background-color: #2B22BB;
     background-image: url("/login-background.png");
     background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    position: relative;
 }
 
-@media (max-aspect-ratio: 16/9) {
-    body {
-        background-position-x: center;
-        background-position-y: 40%;
-        background-size: fill;
-        aspect-ratio: 9/21;
+body::before,
+body::after {
+    content: '';
+    position: absolute;
+    background-color: #2B22BB;
+    z-index: -1;
+}
+
+@media (min-width: 768px) {
+    .grid {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 80vh; 
+    }
+
+    .img-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-top: 0; 
+    }
+
+    .btn-container {
+        position: static;
+        margin-top: 20px;
     }
 }
 
-@media (min-aspect-ratio: 16/9) {
-    body {
-        background-position-y: top;
-        background-size: cover;
+@media (max-width: 768px) {
+    .btn-container {
+        bottom: 100px;
+        position: absolute;
     }
+
+    .img-container {
+        margin-top: 100px;
+    }
+
 }
 
 .btn-login {
     background-color: #DCE2FC;
     color: #412669;
-    font-size: 20px;
+    font-size: 24px;
     border-radius: 8px;
     border: none;
-    width: 175px;
+    width: 200px;
+}
+
+.texto-entrada {
+    color: white;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    font-weight: bold;
+    font-size: 190%;
+}
+
+.desktop-mensagem {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    text-align: center;
+    color: white;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 28px;
+    padding: 20px;
 }
