@@ -9,7 +9,9 @@ export default function Login() {
                 <p className="texto-entrada m-auto">Seja bem-vindo!</p>
             </div>
             <div className="col-12 flex justify-content-center p-0 btn-container">
-                <Button label="ENTRAR" icon="pi pi-microsoft" iconPos="right" className='btn-login px-4 py-3 '/>
+                <a href="/home">
+                    <Button label="ENTRAR" icon="pi pi-microsoft" iconPos="right" className='btn-login px-4 py-3 '/>
+                </a>
             </div>
         </div>
     )
