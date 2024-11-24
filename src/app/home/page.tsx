@@ -1,6 +1,7 @@
 import { Button } from "primereact/button";
 import Navbar from "../components/Navbar";
 import HomeButton from "../components/HomeButton";
+import BottomBar from "../components/BottomBar";
         
         
 import "./../style.css";
@@ -52,7 +53,7 @@ export default function Homepage(){
     return (
         <div>
             <Navbar isHome={true}></Navbar>
-            <div className="grid gap-4 justify-content-center align-items-center mt-3">
+            <div className="grid gap-4 justify-content-center align-items-center mt-3 mx-0 mb-8">
                 {
                     dados.map((dado, index) => {
                         return (
@@ -60,6 +61,7 @@ export default function Homepage(){
                         )
                 }, dados)}
             </div>
+            <BottomBar></BottomBar>
         </div>
     )
 }

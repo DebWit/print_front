@@ -6,6 +6,4 @@ export default function Evento() {
     return (
         <Navbar text="Evento" anchor="/home"></Navbar>
       );
-
-
 } 
