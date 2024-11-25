@@ -61,7 +61,7 @@ export default function Homepage(){
                         )
                 }, dados)}
             </div>
-            <BottomBar></BottomBar>
+            <BottomBar disabled={3}></BottomBar>
         </div>
     )
 }
