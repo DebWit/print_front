@@ -53,7 +53,7 @@ export default function Homepage(){
     return (
         <div>
             <Navbar isHome={true}></Navbar>
-            <div className="grid gap-4 justify-content-center align-items-center mt-3 mx-0 mb-8">
+            <div className="grid gap-4 justify-content-center align-items-center mt-3 mx-0">
                 {
                     dados.map((dado, index) => {
                         return (
