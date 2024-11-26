@@ -53,8 +53,8 @@ export default function Homepage(){
     
     return (
         <div>
-            <Navbar isHome={true}></Navbar>
-            <div className="grid w-full align-items-center justify-content-center m-0">
+            <Navbar isHome={false}></Navbar>
+            <div className="grid w-full align-items-center justify-content-center m-0 p-0">
                 <CarouselHome></CarouselHome>
             </div>
             <div className="grid gap-4 justify-content-center align-items-center mt-3 mx-0">
