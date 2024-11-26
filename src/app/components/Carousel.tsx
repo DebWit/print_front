@@ -1,9 +1,6 @@
 "use client";
-
 import React, { useState, useEffect } from 'react';
-import { Button } from 'primereact/button';
 import { Carousel } from 'primereact/carousel';
-import { Tag } from 'primereact/tag';
 
 
 function brute_images() {
@@ -34,7 +31,7 @@ function CarouselHome() {
 
     return (
         <>
-            <Carousel value={images} numVisible={1} autoplayInterval={5000} numScroll={1} showIndicators className="custom-carousel w-full" circular itemTemplate={imageCarouselTemplate} />
+            <Carousel value={images} numVisible={1} autoplayInterval={5000} numScroll={1} showNavigators={false} className="custom-carousel md:col-8 p-0" circular itemTemplate={imageCarouselTemplate} />
         </>
     )
 }

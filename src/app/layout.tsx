@@ -1,6 +1,7 @@
 // onde guardamos as informações dos imports das bibliotecas e algumas ferramentas
 
 import "primeflex/primeflex.min.css"
+import "primereact/resources/primereact.min.css";
 import 'primeicons/primeicons.css';
 
 
