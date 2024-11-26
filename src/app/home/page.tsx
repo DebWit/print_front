@@ -7,18 +7,17 @@ import CarouselHome from "../components/Carousel";
         
 import "./../style.css";
 import "./style.css";
-import { link } from "fs";
 
 export default function Homepage(){
 
     //dados mockados
     let dados = [
         {
-            text: "evento",
-            icon: "pi pi-bars",
+            text: "Cursos",
+            icon: "pi pi-graduation-cap",
             inverted: false,
             backgroundImage: "/home-1.png",
-            link: "/evento"
+            link: "/cursos"
         },
         {
             text: "content",
