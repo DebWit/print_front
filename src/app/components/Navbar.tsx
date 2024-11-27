@@ -11,8 +11,8 @@ function Navbar({ isHome = false, text = "Lorem Ipsum", anchor = "#"}: { isHome?
     
     const end = <img alt="User" src="/user-sample.jpg" height="60" className="p-ml-2 border-circle border-solid border-white-alpha-90 " style={{aspectRatio: '1/1', objectFit: "cover"}} />;
     const title_page = (
-        <div className="w-full flex justify-content-center align-items-center">
-            <div className="text-center text-1xl font-bold uppercase" style={{color: "#fff"}}>{text}</div>
+        <div className="absolute w-full flex justify-content-center align-items-center h-3rem">
+            <div className="text-center uppercase" style={{color: "#fff", fontSize: "1.25rem"}}>{text}</div>
         </div>
     )
 
@@ -21,7 +21,7 @@ function Navbar({ isHome = false, text = "Lorem Ipsum", anchor = "#"}: { isHome?
             {isHome ? 
             (<Menubar start={start} end={end} style={{backgroundColor: "#060153", border: "none", borderRadius: 0}} className="px-3 py-2" />) :
             (<>
-            <div className='w-full flex' style={{backgroundColor: "#060153"}}>
+            <div className='w-full flex h-3rem' style={{backgroundColor: "#060153"}}>
                 {start}
                 {title_page}
             </div>
