@@ -1,0 +1,52 @@
+
+
+body {
+    background-color: #2B22BB;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .entidade-container {
+    min-height: 100vh;
+    align-items: center;
+    padding: 20px;
+  }
+  
+  .entidade-logo {
+    width: 100%;
+    height: auto;
+    margin-bottom: 30px;
+  }
+  
+
+  .entidade-description {
+    font-size: 27px;
+    line-height: 1.6;
+    color: #FFFFFF;
+    text-align: center;
+    margin: 10px 10px;
+    padding: 0;
+  }
+  
+
+  .entidade-button {
+    background: linear-gradient(90deg, #0E6DDD, #0CE656);
+    color: white;
+    padding: 15px 30px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 27px;
+    text-decoration: none;
+    text-align: center;
+    transition: background 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  
+  .entidade-button:hover {
+    background: #8697DC;
+  }
+  
