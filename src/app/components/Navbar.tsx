@@ -19,7 +19,7 @@ function Navbar({ isHome = false, text = "Lorem Ipsum", anchor = "#"}: { isHome?
     return (
         <>
             {isHome ? 
-            (<Menubar start={start} end={end} style={{backgroundColor: "#060153"}} className="px-3 py-2" />) :
+            (<Menubar start={start} end={end} style={{backgroundColor: "#060153", border: "none", borderRadius: 0}} className="px-3 py-2" />) :
             (<>
             <div className='w-full flex' style={{backgroundColor: "#060153"}}>
                 {start}
