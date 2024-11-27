@@ -9,7 +9,13 @@ export default function CardPadrao({ dados }: { dados: Object }) {
 
     const customTitle = (
         <div className="flex justify-content-between align-items-center">
-            <span style={{ fontFamily: "'Lilita One', sans-serif", fontSize: "24px", color: "black" }}>
+            <span
+                style={{
+                    fontFamily: "'Lilita One', sans-serif",
+                    fontSize: "clamp(1.5rem, 2.5vw, 1.5rem)",
+                    color: "black",
+                }}
+            >
                 {dados.name}
             </span>
             <a href={`/curso/${dados.course_id}`} style={{ textDecoration: 'none' }}>
@@ -19,8 +25,19 @@ export default function CardPadrao({ dados }: { dados: Object }) {
     );
 
     return (
-        <div className="card flex justify-content-center mt-2">
-            <Card title={customTitle} header={header}>
+        <div
+            className="card flex justify-content-center mt-2"
+            style={{
+                display: 'flex',
+                flexDirection: 'column',
+                height: '100%',
+            }}
+        >
+            <Card
+                title={customTitle}
+                header={header}
+                style={{ height: '100%' }}
+            >
             </Card>
         </div>
     );
