@@ -31,7 +31,7 @@ function CarouselHome() {
 
     return (
         <>
-            <Carousel value={images} numVisible={1} autoplayInterval={5000} numScroll={1} showNavigators={false} className="custom-carousel md:col-8 p-0" circular itemTemplate={imageCarouselTemplate} />
+            <Carousel value={images} numVisible={1} autoplayInterval={5000} numScroll={1} showIndicators={false} showNavigators={false} className="custom-carousel md:col-8 p-0" circular itemTemplate={imageCarouselTemplate} />
         </>
     )
 }
