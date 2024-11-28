@@ -5,8 +5,7 @@ import './style.css';
 
 export default function GerenciarCursos() {
     const [searchTerm, setSearchTerm] = useState("");
-
-    const cursos = [
+    const [cursos, setCursos] = useState([
         {
             course_id: "3d9221a7-ef6b-4b6a-90ed-aa6de72c5504",
             course_name: "Ciência da Computação",
@@ -27,16 +26,20 @@ export default function GerenciarCursos() {
             course_name: "Engenharia Mecânica",
             description: "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Repellat dolores eos quis, in repudiandae delectus reprehenderit? Id fuga officia sapiente."
         }
-    ];
+    ]);
 
     const filteredCursos = cursos.filter(curso =>
         curso.course_name.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
+    const deleteCourse = (course_id) => {
+        setCursos(cursos.filter(curso => curso.course_id !== course_id));
+    };
+
     return (
         <div>
             <Navbar text="Gerenciar Cursos" anchor="/home" />
-            <div className="p-inputgroup mt-3 flex justify-content-center" style={{ marginBottom: '20px', maxWidth: '00px', margin: '0 auto' }}>
+            <div className="p-inputgroup mt-3 flex justify-content-center" style={{ marginBottom: '20px', maxWidth: '600px', margin: '0 auto' }}>
                 <input 
                     type="text" 
                     className="p-inputtext p-component" 
@@ -46,20 +49,35 @@ export default function GerenciarCursos() {
                 />
                 <i className="pi pi-search p-3 search-icon"></i>
             </div>
-            <div className="grid flex justify-content-center mt-2">
+            <div className="grid flex justify-content-center mt-2 mx-0">
                 {filteredCursos.map((curso) => (
                     <div key={curso.course_id} className="col-11 lg:col-8">
                         <div className="p-card">
-                            <a  href={`/gerenciar-curso/${curso.course_id}`}>                            
-                                <div className="p-card-body">
-                                    <h4>{curso.course_name}</h4>
-                                    <p>{curso.description}</p>
-                                </div>
-                            </a>
+                            <div className="p-card-body">
+                                <h4>{curso.course_name}</h4>
+                                <p>{curso.description}</p>
+                                <button 
+                                    className="p-button p-component p-button-danger" 
+                                    onClick={() => deleteCourse(curso.course_id)}
+                                >
+                                    <i className="pi pi-minus"></i>
+                                </button>
+                                <a className="ml-1 p-button p-button-warning" href={`/gerenciar-curso/${curso.course_id}`}>
+                                    <i className="pi pi-pencil"></i>
+                                </a>
+                            </div>
                         </div>
                     </div>
                 ))}
+            <div className="mt-4 lg:col-8 col-12">
+                <a 
+                    href="/criar-curso" 
+                    className="p-button p-component add mr-2"
+                    >
+                    +
+                </a>
             </div>
+        </div>
         </div>
     );
 }
