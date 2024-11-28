@@ -53,7 +53,7 @@ export default function GerenciarEntidade() {
     return (
         <>
             <Navbar text="Gerenciar Entidade" anchor="/gerenciar-entidades" />
-            <div className="grid justify-content-center px-4 mt-3">
+            <div className="grid justify-content-center px-4 mt-3 mx-0">
                 <form className="lg:col-4 col-12 p-4 shadow-2 border-round" onSubmit={handleSubmit}>
                     <div className="form-group mb-3 mt-4">
                         <FloatLabel>

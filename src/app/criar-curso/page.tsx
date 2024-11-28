@@ -40,8 +40,8 @@ export default function CriarCurso() {
 
     return (
         <>
-            <Navbar text="Criar Novo Curso" anchor="/home" />
-            <div className="grid justify-content-center px-4 mt-3">
+            <Navbar text="Criar Novo Curso" anchor="/gerenciar-cursos" />
+            <div className="grid justify-content-center px-4 mt-3 mx-0">
                 <form className="lg:col-4 col-12 p-4 shadow-2 border-round" onSubmit={handleSubmit}>
                     <div className="form-group mb-3 mt-4">
                         <FloatLabel>

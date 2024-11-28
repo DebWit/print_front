@@ -38,7 +38,7 @@ export default function GerenciarCursos() {
 
     return (
         <div>
-            <Navbar text="Gerenciar Cursos" anchor="/gerenciar-curso" />
+            <Navbar text="Gerenciar Cursos" anchor="/home" />
             <div className="p-inputgroup mt-3 flex justify-content-center" style={{ marginBottom: '20px', maxWidth: '600px', margin: '0 auto' }}>
                 <input 
                     type="text" 
