@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { ToggleButton } from 'primereact/togglebutton';
 import { hook } from '../eventos/page';
 
-let ActualDay = 0;
+let todayDay = 0;
 export default function DayButton() {
     const dayOfWeek = () => {
         let data = new Date();
@@ -14,7 +14,7 @@ export default function DayButton() {
             let state = []
             for (let i = 0; i < 5; i++) {
                 if (i === dia - 1) {
-                    ActualDay = i;
+                    todayDay = i;
                     state[i] = true;
                 } else {
                     state[i] = false;
@@ -47,7 +47,7 @@ export default function DayButton() {
         let data = []
         for (let i = 0; i < 5; i++) {
             if (i === day) {
-                ActualDay = i;
+                todayDay = i;
                 data[i] = true;
             } else {
                 data[i] = false;
@@ -75,4 +75,4 @@ export default function DayButton() {
     );
 }
 
-export { ActualDay };
+export { todayDay };
