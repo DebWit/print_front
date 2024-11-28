@@ -31,12 +31,12 @@ export default function Cursos() {
     return (
       <>      
         <Navbar text="Cursos de Graduação" anchor="/home"></Navbar>
-        <div className="grid h-screen justify-content-center"> 
-          <div className="col-10 mt-2">
-              {dados.map((key) => (
-                <CardPadrao dados={key} key={key.course_id}/>
-              ))}
-          </div>     
+        <div className="grid flex flex-row justify-content-center m-0">
+          {dados.map((key) => (
+            <div className="col-12 lg:col-3 md:col-4 sm:col-6 mt-2 m-0">
+                  <CardPadrao dados={key} key={key.course_id}/>
+            </div>     
+          ))}
         </div>
       </>
       );

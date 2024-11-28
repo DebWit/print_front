@@ -9,7 +9,7 @@ export default function BottomBar({ disabled = undefined }: { disabled?: number 
                 <a href={disabled === 2 ? "#" : "/my-calendar"} className={className} style={{textDecoration: "none", width: "20%", background: (disabled === 2 ? "#2B22BB99" : "") }}><i className="pi pi-calendar font-light" style={{ fontSize: '2rem' }}></i></a>
                 <a href={disabled === 3 ? "#" : "/home"} className={className} style={{textDecoration: "none", width: "20%", background: (disabled === 3 ? "#2B22BB99" : "") }}><i className="pi pi-home font-light" style={{ fontSize: '2rem'}}></i></a>
                 <a href={disabled === 4 ? "#" : "/events"} className={className} style={{textDecoration: "none", width: "20%", background: (disabled === 4 ? "#2B22BB99" : "") }}><i className="pi pi-bars font-light" style={{ fontSize: '2rem' }}></i></a>
-                <a href={disabled === 5 ? "#" : "/notifications"} className={className} style={{textDecoration: "none", width: "20%", background: (disabled === 5 ? "#2B22BB99" : "") }}><i className="pi pi-bell font-light" style={{ fontSize: '2rem' }}></i></a>
+                <a href={disabled === 5 ? "#" : "/notificacoes"} className={className} style={{textDecoration: "none", width: "20%", background: (disabled === 5 ? "#2B22BB99" : "") }}><i className="pi pi-bell font-light" style={{ fontSize: '2rem' }}></i></a>
             </div>
             <div className="w-full h-4rem mt-4"></div>
         </>

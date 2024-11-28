@@ -1,10 +1,79 @@
-body{
-    background-color: #2B22BB;
-}
-.foto-curso{
-    width: 100%
-}
-.header-sobre{
+body {
+    background-color: #2b22bb;
+  }
+  
+  .foto-curso {
+    width: 100%;
+    height: auto;
+    max-width: 600px;
+  }
+  
+  .card-container {
+    background-color: #98a7e2;
+    padding: 30px;
+    border-radius: 15px;
+    text-align: center;
+    width: 100%;
+    max-width: 400px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+    margin: 20px auto;
+  }
+  
+  .card-container img {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    margin-bottom: 20px;
+  }
+  
+  .card-container h3 {
+    margin: 0;
+    color: black;
+    font-size: 1.5em;
+  }
+  
+  .card-container p {
+    margin: 10px 0 0;
     color: white;
-    font-weight: 0;
-}
+    font-size: 1.2em;
+  }
+  
+  .card-and-description {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 30px;
+  }
+  
+  .header-sobre {
+    color: white;
+    font-weight: bold;
+    text-align: center;
+    font-size: 1.8em;
+    margin-bottom: 20px;
+  }
+  
+  .description-container {
+    text-align: center;
+    color: white;
+    font-size: 1.2em;
+    max-width: 700px;
+    line-height: 1.6;
+  }
+  
+  .see-more-btn {
+    background-color: #98a7e2;
+    border: none;
+    color: black;
+    font-size: 1.2em;
+    margin-top: 10px;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .see-more-btn:hover {
+    background-color: #2b22bb;
+    color: white;
+  }
+  
