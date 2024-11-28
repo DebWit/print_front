@@ -27,11 +27,11 @@ export default function Homepage(){
             link: "/content"
         },
         {
-            text: "evento",
+            text: "eventos",
             icon: "pi pi-bars",
             inverted: false,
             backgroundImage: "/home-1.png",
-            link: "/evento"
+            link: "/eventos"
         },
         {
             text: "content",
