@@ -1,0 +1,17 @@
+textarea {
+    resize: none; 
+    width: 100%;
+    box-sizing: border-box;
+}
+
+@media (min-width: 768px) {
+    textarea {
+        width: 80%;
+    }
+}
+
+@media (min-width: 1024px) {
+    textarea {
+        width: 60%;
+    }
+}
