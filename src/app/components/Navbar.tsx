@@ -6,13 +6,13 @@ import { title } from 'process';
 
 function Navbar({ isHome = false, text = "Lorem Ipsum", anchor = "#"}: { isHome?: boolean, text?: string, anchor?: string }) {
     const start = isHome ? <img alt="Logo" src="/print-logo.png" height="60" className="p-mr-2" />
-    : <a href={anchor} title="Back" className='ml-2 p-2'><span className="pi pi-arrow-left 
+    : <a href={anchor} title="Back" className='ml-2 p-2 z-5'><span className="pi pi-arrow-left 
     p-mr-2 py-1" style={{ fontSize: "1.5rem", color: "#fff"}} /></a>;
     
     const end = <img alt="User" src="/user-sample.jpg" height="60" className="p-ml-2 border-circle border-solid border-white-alpha-90 " style={{aspectRatio: '1/1', objectFit: "cover"}} />;
     const title_page = (
-        <div className="absolute w-full flex justify-content-center align-items-center h-3rem">
-            <div className="text-center uppercase" style={{color: "#fff", fontSize: "1.25rem"}}>{text}</div>
+        <div className="absolute z-0 w-full flex justify-content-center align-items-center h-3rem">
+            <div className="text-center uppercase" style={{color: "#fff", fontSize: "1.25rem", userSelect: "none"}}>{text}</div>
         </div>
     )
 

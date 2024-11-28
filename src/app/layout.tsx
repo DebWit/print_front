@@ -22,7 +22,7 @@ export default function RootLayout({
           rel="stylesheet"
         />
       </head>
-      <body style={{ fontFamily: "'Lilita One', sans-serif" }}>{children}</body>
+      <body style={{ fontFamily: "'Lilita One', sans-serif", margin: "0", padding: "0"}}>{children}</body>
     </html>
   )
 }
