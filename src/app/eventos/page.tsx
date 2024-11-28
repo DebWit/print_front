@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import Navbar from "../components/Navbar";
 import { AutoComplete } from 'primereact/autocomplete';
 import DayButton, {ActualDay} from "../components/DayButton";
+import EventButton from "../components/EventButton";
 
 import "./style.css";
 let hook: React.Dispatch<React.SetStateAction<number>>;
@@ -30,8 +31,8 @@ export default function Evento() {
       <div className="w-full flex justify-content-center">
         <DayButton/>
       </div>
-      <div className="w-full flex justify-content center">
-        
+      <div className="w-full flex justify-content-center">
+        <EventButton title="Lorem Ipsum" startTime="7:40" endTime="8:40" location="CEAF" anchor="#"></EventButton>
       </div>
     </>
   );
