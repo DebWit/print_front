@@ -6,7 +6,7 @@ import Navbar from '@/app/components/Navbar';
 import InputPhoto from '@/app/components/InputPhoto';
 import { useParams } from "next/navigation";
 import React, { useState } from 'react';
-import './style.css';
+import '../style.css';
 import { Button } from "primereact/button";
 
 export default function GerenciarCurso() {

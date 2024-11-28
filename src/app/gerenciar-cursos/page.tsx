@@ -38,7 +38,7 @@ export default function GerenciarCursos() {
 
     return (
         <div>
-            <Navbar text="Gerenciar Cursos" anchor="/home" />
+            <Navbar text="Gerenciar Cursos" anchor="/gerenciar-curso" />
             <div className="p-inputgroup mt-3 flex justify-content-center" style={{ marginBottom: '20px', maxWidth: '600px', margin: '0 auto' }}>
                 <input 
                     type="text" 
@@ -56,15 +56,15 @@ export default function GerenciarCursos() {
                             <div className="p-card-body">
                                 <h4>{curso.course_name}</h4>
                                 <p>{curso.description}</p>
+                                <a className="mr-1 p-button p-button-warning" href={`/gerenciar-curso/${curso.course_id}`}>
+                                    <i className="pi pi-pencil"></i>
+                                </a>
                                 <button 
                                     className="p-button p-component p-button-danger" 
                                     onClick={() => deleteCourse(curso.course_id)}
                                 >
                                     <i className="pi pi-minus"></i>
                                 </button>
-                                <a className="ml-1 p-button p-button-warning" href={`/gerenciar-curso/${curso.course_id}`}>
-                                    <i className="pi pi-pencil"></i>
-                                </a>
                             </div>
                         </div>
                     </div>
