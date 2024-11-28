@@ -6,6 +6,7 @@
 import React from "react";
 import { useParams } from "next/navigation";
 import Navbar from "../../components/Navbar";
+import BottomBar from "@/app/components/BottomBar";
 import entidades from "../entidade.json";
 import "../style.css";
 import "primeicons/primeicons.css";
@@ -63,6 +64,7 @@ export default function Entidade() {
           </div>
         </div>
       </div>
+      <BottomBar></BottomBar>
     </>
   );
 }
