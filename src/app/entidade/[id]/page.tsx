@@ -1,46 +1,55 @@
+// ta quase completo, faltam itens que estou aguardando mais informações:
+// 1. Mateus pediu pra fazer a pesquisa pelo id em vez de pelo nome, nao compreendo se é porque ele quer alterar para a url nao ficar com o nome da entidade mas com um numero de id
+// 2. a ordem dos itenss, nessa tela está: imagem, descrição e botão, o que funciona bem para uma tela desktop, mas para celular, gostaria de alterar porque o botão fica escondido pela descrição.
 
 "use client";
 import React from "react";
 import { useParams } from "next/navigation";
 import Navbar from "../../components/Navbar";
-import entidades from "../entidade.json"; // Importa os dados do JSON
+import entidades from "../entidade.json";
 import "../style.css";
 import "primeicons/primeicons.css";
 
 export default function Entidade() {
-  const { id } = useParams(); // Obtém o identificador da entidade (ex.: "Dev Community Mauá")
+  const { id } = useParams();
 
-  // Localiza a entidade correspondente no JSON
+
   const entidade = entidades.find((ent) => 
     ent.name
   .toLowerCase()
-  .normalize("NFD") // Remove acentos
-  .replace(/[\u0300-\u036f]/g, "") // Remove marcas diacríticas
-  .replace(/\s+/g, "-") // Substitui espaços por hífens
-  .replace(/[^a-z0-9-]/g, "") // Remove caracteres especiais
+  .normalize("NFD")
+  .replace(/[\u0300-\u036f]/g, "")
+  .replace(/\s+/g, "-")
+  .replace(/[^a-z0-9-]/g, "")
   === id);
 
   if (!entidade) {
-    return <div>Entidade não encontrada!</div>; // Mensagem de erro se a entidade não for encontrada
+    return <div>Entidade não encontrada!</div>;
   }
 
   return (
     <>
       <Navbar text={entidade.name} anchor="/entidade"></Navbar>
-      <div className="grid nested-grid align-items-center">
-        <div className="col-12 md:col-6">
-          <div className="grid text-center">
-            {/* Logo da Entidade */}
-            <div className="col-12">
+      <div className="grid nested-grid align-items-center justify-content-center" style={{ minHeight: '80vh' }}>
+
+                <div className="col-12 md:col-5">
+        {/* Logo da Entidade */}
+        <div className="col-12">
               <img
                 src={entidade.url}
                 alt={`Logo da entidade ${entidade.name}`}
-                className="entidade-logo"
-              />
+                className="entidade-logo"/>
             </div>
+        </div>
+
+        <div className="col-12 md:col-6">
+          <div className="grid text-center">
+            
+          {/* Descrição da Entidade */}
+          <p className="entidade-description">{entidade.description}</p>
 
             {/* Botão */}
-            <div className="col-12">
+            <div className="col-12 flex justify-content-center">
               <a
                 href={entidade.instagram}
                 target="_blank"
@@ -52,11 +61,6 @@ export default function Entidade() {
               </a>
             </div>
           </div>
-        </div>
-
-        {/* Descrição da Entidade */}
-        <div className="col-12 md:col-5">
-          <p className="entidade-description">{entidade.description}</p>
         </div>
       </div>
     </>
