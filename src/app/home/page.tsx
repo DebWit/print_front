@@ -10,7 +10,7 @@ import "./style.css";
 
 export default function Homepage(){
 
-    const isAdmin = true;
+    const isAdmin = false;
 
     let dados = [
         {
@@ -76,10 +76,10 @@ export default function Homepage(){
             "route": "gerenciar-notificacoes"
         },
         {
-            "name": "Buscar Pessoa",
+            "name": "Listar Pessoas",
             "icon": "pi pi-search",
             "color": "red",
-            "route": "/buscar-pessoa"
+            "route": "/listar-pessoas"
         }
     ]
 
