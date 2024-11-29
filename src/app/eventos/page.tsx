@@ -39,224 +39,224 @@ export default function Evento() {
             "startTime": "7:40",
             "endTime": "8:40",
             "location": "CEAF",
-            "anchor": "#"
+            "anchor": "/evento/550e8400-e29b-41d4-a716-446655440000"
         },
         {
             "title": "Lorem Ipsum",
             "startTime": "7:40",
             "endTime": "8:40",
             "location": "CEAF",
-            "anchor": "#"
+            "anchor": "/evento/550e8400-e29b-41d4-a716-446655440000"
         },
         {
             "title": "Lorem Ipsum",
             "startTime": "7:40",
             "endTime": "8:40",
             "location": "CEAF",
-            "anchor": "#"
+            "anchor": "/evento/550e8400-e29b-41d4-a716-446655440000"
         },
         {
             "title": "Lorem Ipsum",
             "startTime": "7:40",
             "endTime": "8:40",
             "location": "CEAF",
-            "anchor": "#"
+            "anchor": "/evento/550e8400-e29b-41d4-a716-446655440000"
         },
         {
             "title": "Lorem Ipsum",
             "startTime": "7:40",
             "endTime": "8:40",
             "location": "CEAF",
-            "anchor": "#"
+            "anchor": "/evento/550e8400-e29b-41d4-a716-446655440000"
         },
         {
             "title": "Lorem Ipsum",
             "startTime": "7:40",
             "endTime": "8:40",
             "location": "CEAF",
-            "anchor": "#"
+            "anchor": "/evento/550e8400-e29b-41d4-a716-446655440000"
         },
         {
             "title": "Lorem Ipsum",
             "startTime": "7:40",
             "endTime": "8:40",
             "location": "CEAF",
-            "anchor": "#"
+            "anchor": "/evento/550e8400-e29b-41d4-a716-446655440000"
         }],
         "TER": [{
             "title": "Ter",
             "startTime": "7:40",
             "endTime": "8:40",
             "location": "CEAF",
-            "anchor": "#"
+            "anchor": "/evento/550e8400-e29b-41d4-a716-446655440000"
         },
         {
             "title": "Lorem Ipsum",
             "startTime": "7:40",
             "endTime": "8:40",
             "location": "CEAF",
-            "anchor": "#"
+            "anchor": "/evento/550e8400-e29b-41d4-a716-446655440000"
         },
         {
             "title": "Lorem Ipsum",
             "startTime": "7:40",
             "endTime": "8:40",
             "location": "CEAF",
-            "anchor": "#"
+            "anchor": "/evento/550e8400-e29b-41d4-a716-446655440000"
         },
         {
             "title": "Lorem Ipsum",
             "startTime": "7:40",
             "endTime": "8:40",
             "location": "CEAF",
-            "anchor": "#"
+            "anchor": "/evento/550e8400-e29b-41d4-a716-446655440000"
         }],
         "QUA": [{
             "title": "Qua",
             "startTime": "7:40",
             "endTime": "8:40",
             "location": "CEAF",
-            "anchor": "#"
+            "anchor": "/evento/550e8400-e29b-41d4-a716-446655440000"
         },
         {
             "title": "Lorem Ipsum",
             "startTime": "7:40",
             "endTime": "8:40",
             "location": "CEAF",
-            "anchor": "#"
+            "anchor": "/evento/550e8400-e29b-41d4-a716-446655440000"
         },
         {
             "title": "Lorem Ipsum",
             "startTime": "7:40",
             "endTime": "8:40",
             "location": "CEAF",
-            "anchor": "#"
+            "anchor": "/evento/550e8400-e29b-41d4-a716-446655440000"
         },
         {
             "title": "Lorem Ipsum",
             "startTime": "7:40",
             "endTime": "8:40",
             "location": "CEAF",
-            "anchor": "#"
+            "anchor": "/evento/550e8400-e29b-41d4-a716-446655440000"
         },
         {
             "title": "Lorem Ipsum",
             "startTime": "7:40",
             "endTime": "8:40",
             "location": "CEAF",
-            "anchor": "#"
+            "anchor": "/evento/550e8400-e29b-41d4-a716-446655440000"
         },
         {
             "title": "Lorem Ipsum",
             "startTime": "7:40",
             "endTime": "8:40",
             "location": "CEAF",
-            "anchor": "#"
+            "anchor": "/evento/550e8400-e29b-41d4-a716-446655440000"
         },
         {
             "title": "Lorem Ipsum",
             "startTime": "7:40",
             "endTime": "8:40",
             "location": "CEAF",
-            "anchor": "#"
+            "anchor": "/evento/550e8400-e29b-41d4-a716-446655440000"
         },
         {
             "title": "Lorem Ipsum",
             "startTime": "7:40",
             "endTime": "8:40",
             "location": "CEAF",
-            "anchor": "#"
+            "anchor": "/evento/550e8400-e29b-41d4-a716-446655440000"
         },
         {
             "title": "Lorem Ipsum",
             "startTime": "7:40",
             "endTime": "8:40",
             "location": "CEAF",
-            "anchor": "#"
+            "anchor": "/evento/550e8400-e29b-41d4-a716-446655440000"
         },
         {
             "title": "Lorem Ipsum",
             "startTime": "7:40",
             "endTime": "8:40",
             "location": "CEAF",
-            "anchor": "#"
+            "anchor": "/evento/550e8400-e29b-41d4-a716-446655440000"
         },
         {
             "title": "Lorem Ipsum",
             "startTime": "7:40",
             "endTime": "8:40",
             "location": "CEAF",
-            "anchor": "#"
+            "anchor": "/evento/550e8400-e29b-41d4-a716-446655440000"
         },
         {
             "title": "Lorem Ipsum",
             "startTime": "7:40",
             "endTime": "8:40",
             "location": "CEAF",
-            "anchor": "#"
+            "anchor": "/evento/550e8400-e29b-41d4-a716-446655440000"
         }],
         "QUI": [{
             "title": "Qui",
             "startTime": "7:40",
             "endTime": "8:40",
             "location": "CEAF",
-            "anchor": "#"
+            "anchor": "/evento/550e8400-e29b-41d4-a716-446655440000"
         },
         {
             "title": "Lorem Ipsum",
             "startTime": "7:40",
             "endTime": "8:40",
             "location": "CEAF",
-            "anchor": "#"
+            "anchor": "/evento/550e8400-e29b-41d4-a716-446655440000"
         },
         {
             "title": "Lorem Ipsum",
             "startTime": "7:40",
             "endTime": "8:40",
             "location": "CEAF",
-            "anchor": "#"
+            "anchor": "/evento/550e8400-e29b-41d4-a716-446655440000"
         },
         {
             "title": "Lorem Ipsum",
             "startTime": "7:40",
             "endTime": "8:40",
             "location": "CEAF",
-            "anchor": "#"
+            "anchor": "/evento/550e8400-e29b-41d4-a716-446655440000"
         }],
         "SEX": [{
             "title": "Sex",
             "startTime": "7:40",
             "endTime": "8:40",
             "location": "CEAF",
-            "anchor": "#"
+            "anchor": "/evento/550e8400-e29b-41d4-a716-446655440000"
         },
         {
             "title": "Lorem Ipsum",
             "startTime": "7:40",
             "endTime": "8:40",
             "location": "CEAF",
-            "anchor": "#"
+            "anchor": "/evento/550e8400-e29b-41d4-a716-446655440000"
         },
         {
             "title": "Lorem Ipsum",
             "startTime": "7:40",
             "endTime": "8:40",
             "location": "CEAF",
-            "anchor": "#"
+            "anchor": "/evento/550e8400-e29b-41d4-a716-446655440000"
         },
         {
             "title": "Lorem Ipsum",
             "startTime": "7:40",
             "endTime": "8:40",
             "location": "CEAF",
-            "anchor": "#"
+            "anchor": "/evento/550e8400-e29b-41d4-a716-446655440000"
         },
         {
             "title": "Lorem Ipsum",
             "startTime": "7:40",
             "endTime": "8:40",
             "location": "CEAF",
-            "anchor": "#"
+            "anchor": "/evento/550e8400-e29b-41d4-a716-446655440000"
         }],
     }
 
