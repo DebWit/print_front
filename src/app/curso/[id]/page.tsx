@@ -31,7 +31,7 @@ export default function Curso() {
 
   return (
     <>
-      <Navbar text={dados.name} anchor="/home"></Navbar>
+      <Navbar text={dados.name} anchor="/eventos"></Navbar>
       <div className="grid m-0 p-0 flex flex-wrap justify-content-center">
         <div className="col-12 md:col-6 flex justify-content-center p-0 m-0">
           <img

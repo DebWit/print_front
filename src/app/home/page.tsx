@@ -14,20 +14,6 @@ export default function Homepage(){
 
     let dados = [
         {
-            text: "Cursos",
-            icon: "pi pi-graduation-cap",
-            inverted: false,
-            backgroundImage: "/home-1.png",
-            link: "/cursos"
-        },
-        {
-            text: "content",
-            icon: "pi pi-arrow-left",
-            inverted: true,
-            backgroundImage: "/home-inverted-1.png",
-            link: "/content"
-        },
-        {
             text: "eventos",
             icon: "pi pi-bars",
             inverted: false,
@@ -35,18 +21,32 @@ export default function Homepage(){
             link: "/eventos"
         },
         {
-            text: "content",
-            icon: "pi pi-book",
+            text: "Minha Agenda",
+            icon: "pi pi-calendar",
             inverted: true,
             backgroundImage: "/home-inverted-1.png",
-            link: "/content"
+            link: "/minhaagenda"
         },
         {
-            text: "evento",
-            icon: "pi pi-bars",
+            text: "Cursos",
+            icon: "pi pi-graduation-cap",
             inverted: false,
             backgroundImage: "/home-1.png",
-            link: "/evento"
+            link: "/cursos"
+        },
+        {
+            text: "Notificações",
+            icon: "pi pi-bell",
+            inverted: true,
+            backgroundImage: "/home-inverted-1.png",
+            link: "/notificacoes"
+        },
+        {
+            text: "Mapa",
+            icon: "pi pi-map",
+            inverted: false,
+            backgroundImage: "/home-1.png",
+            link: "/mapa"
         },
     ]
 
