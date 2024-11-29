@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import Navbar from "../components/Navbar";
 import BottomBar from "../components/BottomBar";
-import DayButton, { todayDay } from "../components/DayButton";
+import DayButton, { todayDay } from "../components/DayButtonEvents";
 import EventButton from "../components/EventButton";
 import { InputText } from "primereact/inputtext";
 import { Button } from "primereact/button";
