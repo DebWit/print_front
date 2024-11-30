@@ -50,7 +50,6 @@ export default function Notificacoes() {
     const handleNotificationClick = (notification: Notification) => {
         setSelectedNotification(notification);
         setSidebarVisible(true);
-        // Marcar a notificação como "visto"
         setNotificacoes((prevNotificacoes) =>
             prevNotificacoes.map((notif) =>
                 notif.notification_id === notification.notification_id

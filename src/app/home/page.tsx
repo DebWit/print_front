@@ -10,7 +10,8 @@ import "./style.css";
 
 export default function Homepage(){
 
-    //dados mockados
+    const isAdmin = true;
+
     let dados = [
         {
             text: "eventos",
@@ -48,23 +49,85 @@ export default function Homepage(){
             link: "/mapa"
         },
     ]
-    
-    
-    return (
-        <div>
-            <Navbar isHome={true}></Navbar>
-            <div className="grid w-full align-items-center justify-content-center m-0 p-0">
-                <CarouselHome></CarouselHome>
+
+    let cards = [
+        {
+            "name": "Eventos",
+            "icon": "pi pi-calendar",
+            "color": "cyan",
+            "route": "/gerenciar-eventos"
+        },
+        {
+            "name": "Cursos",
+            "icon": "pi pi-graduation-cap",
+            "color": "yellow",
+            "route": "/gerenciar-cursos"
+        },
+        {
+            "name": "Entidades",
+            "icon": "pi pi-users",
+            "color": "green",
+            "route": "gerenciar-entidades"
+        },
+        {
+            "name": "Notificações",
+            "icon": "pi pi-bell",
+            "color": "blue",
+            "route": "gerenciar-notificacoes"
+        },
+        {
+            "name": "Listar Pessoas",
+            "icon": "pi pi-search",
+            "color": "red",
+            "route": "/listar-pessoas"
+        }
+    ]
+
+    if (isAdmin) {
+        return (
+            <div>
+                <Navbar isHome={true} />
+                <div className="grid flex justify-content-center gap-3 mt-4 mx-0">
+                    {cards
+                        .map((object, i) => (
+                            <div key={i} className="col-12 sm:col-6 md:col-4 lg:col-3">
+                                <a href={object.route}>
+                                <div className="card-admin">
+                                <i
+                                    className={`pi ${object.icon}`}
+                                    style={{
+                                        color: object.color, 
+                                        fontSize: '12rem',
+                                    }}
+                                >
+                                </i>
+                                    <p style={{color: object.color}}>{object.name}</p>
+                                </div>
+                                </a>
+                            </div>
+                        ))}
+                </div>
+                <BottomBar disabled={3} />
             </div>
-            <div className="grid gap-4 justify-content-center align-items-center mt-3 mx-0">
-                {
-                    dados.map((dado, index) => {
-                        return (
-                            <HomeButton key={index} text={dado.text} icon={dado.icon} inverted={dado.inverted} backgroundImage={dado.backgroundImage} link={dado.link}></HomeButton>
-                        )
-                }, dados)}
+        );
+    }
+    else{
+        return (
+            <div>
+                <Navbar isHome={true}></Navbar>
+                <div className="grid w-full align-items-center justify-content-center m-0 p-0">
+                    <CarouselHome></CarouselHome>
+                </div>
+                <div className="grid gap-4 justify-content-center align-items-center mt-3 mx-0">
+                    {
+                        dados.map((dado, index) => {
+                            return (
+                                <HomeButton key={index} text={dado.text} icon={dado.icon} inverted={dado.inverted} backgroundImage={dado.backgroundImage} link={dado.link}></HomeButton>
+                            )
+                    }, dados)}
+                </div>
+                <BottomBar disabled={3}></BottomBar>
             </div>
-            <BottomBar disabled={3}></BottomBar>
-        </div>
-    )
+        )
+    }
 }

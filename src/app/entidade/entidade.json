@@ -1,0 +1,156 @@
+[
+	{
+	  "id": 0,
+	  "name": "Concreto Mauá",
+	  "description": "O Concreto Mauá estimula a proatividade dos alunos, pensando em soluções diversas para competições acadêmicas sobre projetos completos de arquitetura, uso de concreto e suas mais diversas aplicações. Participamos das competições do Instituto Brasileiro do Concreto (IBRACON) e do American Concrete Institute (ACI). As competições que participamos anualmente são: CONCREBOL, APO (Aparato de Proteção ao Ovo), COCAR (Concreto Colorido de Alta Resistência), QSFV (Quem Sabe Faz Ao Vivo) e OUSADIA.",
+	  "url": "https://d1135f49d6br9m.cloudfront.net/LOGO CONCRETO MAUA.jpg",
+	  "instagram": "https://www.instagram.com/concreto.maua/"
+	},
+	{
+	  "id": 1,
+	  "name": "IMT Aerodesign",
+	  "description": "Unimos alunos de diversas áreas (engenharia, design, administração e TI), todos motivados a explorar e aprender mais sobre o fascinante mundo aeroespacial. A nossa equipe está envolvida na competição da SAE Aerodesign em São José dos Campos, cujo objetivo é desenvolver aeronaves cargueiras. A competição compreende duas fases, onde são avaliados tanto o projeto quanto a qualidade do voo e a capacidade de carga. O céu não é o limite, para nós, ele é so o começo!",
+	  "url": "https://d1135f49d6br9m.cloudfront.net/Logo Aerodesign.jpg",
+	  "instagram": "https://www.instagram.com/Imt_aerodesign/"
+	},
+	{
+	  "id": 2,
+	  "name": "Mauá Racing",
+	  "description": "A equipe constitui-se como uma empresa estudantil de automobilismo. Os estudantes projetam, constroem e competem com um veículo de alta performance do tipo fórmula, utilizando um motor de até 710 cilindradas. Durante quatro dias de competição pela SAE Brasil, as equipes realizam provas estáticas e provas dinâmicas. O 1º e 2º colocados conquistam o direito de representar o Brasil na Fórmula SAE nos EUA.",
+	  "url": "https://d1135f49d6br9m.cloudfront.net/Mauá Racing Fórmula.jpg",
+	  "instagram": "https://www.instagram.com/mauaracing/"
+	},
+	{
+	  "id": 3,
+	  "name": "Eco Mauá",
+	  "description": "Formada por alunos do Instituto Mauá de Tecnologia, a Eco Mauá tem como objetivo produzir veículos com uma maior eficiência energética, podendo ser movidos a gasolina, elétricos ou a hidrogênio. Hoje, a Eco é dividida em 6 setores, são eles: Powertrain, Estruturas, Elétrica, RH, Financeiro e Marketing Além da eficiência energética, inovação tecnológica, segurança do piloto e impacto ambiental são importantes para a avaliação da equipe. Já participamos em grandes competições, entre elas a Shell Eco-Marathon, Petrobras e Inventum.",
+	  "url": "https://d1135f49d6br9m.cloudfront.net/Logo Eco Mauá.png",
+	  "instagram": "https://www.instagram.com/eco_maua/"
+	},
+	{
+	  "id": 4,
+	  "name": "Baja Mauá",
+	  "description": "É uma equipe que não só constrói um carro equipado e resistente, como também o dirigem! Os estudantes participam de competições off road organizadas pela SAE Brasil onde realizam a presentação do projeto, provas de segurança, Super Prime e Enduro.",
+	  "url": "https://d1135f49d6br9m.cloudfront.net/Baja Mauá.webp",
+	  "instagram": "https://www.instagram.com/bajamaua/"
+	},
+	{
+	  "id": 5,
+	  "name": "Mauá Racing H2 Team",
+	  "description": "A equipe desenvolve, cria, projeta e manufatura um carro movido a hidrogênio para competir em uma competição organizada pela SAE Brasil.",
+	  "url": "https://d1135f49d6br9m.cloudfront.net/Racing H2.png",
+	  "instagram": "https://www.instagram.com/mauaracingh2/"
+	},
+	{
+	  "id": 6,
+	  "name": "Kimauánisso",
+	  "description": "Equipe de robótica  dedicada e apaixonada por inovação e tecnologia, participa de competições acadêmicas, tanto nacionais quanto internacionais. É classificada como uma das melhores equipes de sumô de robôs do Brasil. Os estudantes desenvolvem robôs autônomos e rádio-controlados para participarem em mais de 8 categorias (Sumô 3kg, Sumô Lego, Sumô mini, Seguidor de linha, Trekking, Artbot, Combate e Hockey).",
+	  "url": "https://d1135f49d6br9m.cloudfront.net/KIMAUANISSO.jpg",
+	  "instagram": "https://www.instagram.com/kimauanisso/"
+	},
+	{
+	  "id": 7,
+	  "name": "Maua Esports",
+	  "description": "Equipe de esporte eletrônico que visa competir e representar o Instituto Mauá de Tecnologia (IMT) no cenário universitário, agrupando futuros profissionais e buscando promover desde uma primeira experiência competitiva à gestão de pessoas e talentos. Além disso, o Mauá Esports almeja mostrar que o cenário de esports vai além de um simples jogo, possuindo um público de milhões de espectadores ao redor do mundo.",
+	  "url": "https://d1135f49d6br9m.cloudfront.net/Logo Mauá Esports.png",
+	  "instagram": "https://www.instagram.com/esportsmaua/"
+	},
+	{
+	  "id": 8,
+	  "name": "Nawat Games",
+	  "description": "Entidade que foca no desenvolvimento de jogos eletrônicos, normalmente em 2D e utilizando Pixel Art. Desejamos ensinar e aprender todos juntos mais sobre o mundo de como é feito cada jogo, desde a programação até a arte. Tenha vontade de aprender e o gosto por jogos que com certeza será muito bem-vindo aqui na Nawat!",
+	  "url": "https://d1135f49d6br9m.cloudfront.net/Logo Nawat.jpg",
+	  "instagram": "https://www.instagram.com/nawat.maua/"
+	},
+	{
+	  "id": 9,
+	  "name": "Inova Mauá",
+	  "description": "Fundado em 2017, o Inova Mauá é uma equipe competitiva que busca participar de feiras, congressos e competições acadêmicas com nossos projetos inovadores e sustentáveis desenvolvidos ao longo de um ano. A equipe começou seus trabalhos voltada para as Engenharias Química e de Alimentos, mas hoje buscamos realizar projetos multidisciplinares, que englobam todos os cursos oferecidos pelo Instituto Mauá de Tecnologia.",
+	  "url": "https://d1135f49d6br9m.cloudfront.net/Logo Inova Mauá.png",
+	  "instagram": "https://www.instagram.com/inovamaua/"
+	},
+	{
+	  "id": 10,
+	  "name": "Mauá Social",
+      "description": "Entidade de trabalho voluntário sem fins lucrativos voltada a todos os tipos de ações sociais, envolvendo creches, asilos, abrigos, moradores de rua, orfanatos, centro de apoio a pessoas com maiores necessidades. Realizamos campanhas de arrecadação ao longo do ano e palestras voltadas a ações sociais realizadas no IMT.",
+      "url": "https://d1135f49d6br9m.cloudfront.net/Maua+Social.jpeg",
+      "instagram": "https://www.instagram.com/mauasocial/"
+	},
+	{
+	  "id": 11,
+      "name": "Centro Acadêmico Mauá",
+      "description": "O Centro Acadêmico Mauá é uma entidade fundada em 1962 por alunos a fim de defender os interesses dos alunos e melhorar a experiência pessoal e profissional de cada um deles dentro da Mauá. Desempenhamos papel de porta-voz entre o corpo docente e a coordenação do IMT em situações acadêmicas, além de buscar parcerias, promover palestras, ativações e realizar eventos durante o ano para aliviar o estresse acadêmico. O CA, como é mais conhecido pelos alunos, também é responsável pela realização de festas, eventos e campanhas sociais.",
+      "url": "https://d1135f49d6br9m.cloudfront.net/Logo+Centro+Acadêmico.png",
+      "instagram": "https://www.instagram.com/camaua/"
+	},
+	{
+	  "id": 12,
+      "name": "NAE Mauá",
+      "description": "Núcleo Abenge Estudantil Mauá, fundado em 2020, somos uma associação civil, sem fins lucrativos. Buscamos incentivar os alunos a serem protagonistas em sua educação, proporcionando uma comunicação mais efetiva com os docentes e criando projetos para compartilhar informações e desenvolver habilidades que serão necessárias para a vida pessoal e profissional dos alunos.",
+      "url": "https://d1135f49d6br9m.cloudfront.net/Logo+NAE.png",
+      "instagram": "https://www.instagram.com/naemaua/"
+	},
+	{
+	  "id": 13,
+      "name": "Dev Community Mauá",
+      "description": "A Dev Community Mauá é a maior comunidade de desenvolvimento de soluções tecnológicas da Mauá, utilizando as melhores práticas de mercado desde a concepção até a realização de projetos, com uma estrutura de áreas administrativas, desenvolvimento e comunicação (marketing).",
+      "url": "https://d1135f49d6br9m.cloudfront.net/Logo+Dev+Community.jpg",
+      "instagram": "https://www.instagram.com/devcommunitymaua/"
+	},
+	{
+	  "id": 14,
+      "name": "Mauá Finance Group",
+      "description": "O Mauá Finance Group, nascido da fusão entre o IMT Finance e o Mauá Business Club, é a liga de mercado financeiro do Instituto Mauá de Tecnologia. Nosso objetivo é preparar nossos membros para uma inserção eficaz no mercado financeiro e em consultoria estratégica através de nossas especialidades. Estamos comprometidos em introduzir uma nova esfera de atuação na comunidade Mauá, onde o desempenho e o compromisso são fundamentais para o sucesso de qualquer projeto. Diferente do foco industrial da faculdade, nosso ambiente prioriza o setor empresarial, oferecendo novas oportunidades em finanças e empreendedorismo para os alunos.",
+      "url": "https://d1135f49d6br9m.cloudfront.net/Logo+Mauá+Finance+Group.jpg",
+      "instagram": "https://www.instagram.com/mauafinancegroup/"
+	},
+	{
+	  "id": 15,
+      "name": "Mauá Jr",
+      "description": "É uma empresa, formada pelos próprios alunos da graduação. Aos nossos clientes, oferecemos serviços de consultoria nas áreas de Engenharia, Tecnologia, Design e Administração. Nosso objetivo é possibilitar que os membros tenham um primeiro contato com o mercado de trabalho e possam se desenvolver profissionalmente, além de construir amizades que ficam para sempre.",
+      "url": "https://d1135f49d6br9m.cloudfront.net/5Logo+Mauá+Jr.png",
+      "instagram": "https://www.instagram.com/mauajr/"
+	},
+	{
+	  "id": 16,
+      "name": "Metaverso",
+      "description": "O Metaverso Mauá é uma equipe academica que se dedica em estudar e desenvolver aplicações de realidade virtual (VR), aumentada (AR) e realidade mista (MR), buscando inovar experiências da faculdade e mostrar as possibilidades dessas tecnologias. No Metaverso Mauá, nossa principal missão é potencializar o aprendizado de todos os alunos da comunidade Mauá, proporcionando experiências envolventes e inovadoras. Além de oferecermos a oportunidade de trabalhar em projetos na prática, aprendendo como desenvolver um projeto de VR/AR/MR e como utilizar diversas ferramentas essenciais, como a Unity.",
+      "url": "https://d1135f49d6br9m.cloudfront.net/logo_metaverso.png",
+      "instagram": "https://www.instagram.com/mauamvm/"
+	},
+	{
+	  "id": 17,
+      "name": "AAABM (Atlética)",
+      "description": "A Atlética é responsável gerir treinos e eventos, esportivos e sociais, estamos a 62 anos representando no esporte universitário paulista, brasileiro e mundial! Nosso processo seletivo ocorre no início do ano, venha fazer parte dessa família! Estamos localizados no bloco T (atrás do Centro Acadêmico), abertos pra receber todos os alunos durante o período de aulas, das 7h30min às 22h.",
+      "url": "https://d1135f49d6br9m.cloudfront.net/Logo+Atlética.png",
+      "instagram": "https://www.instagram.com/gaspar_maua/"
+	},
+	{
+	  "id": 18,
+      "name": "Bateria Mauá",
+      "description": "A Bateria Mauá - Clube da Manga, fundada em 1996, é uma entidade cultural do IMT. Atuamos como bateria de arquibancada, que é responsável por animar jogos esportivos, e também, como bateria show, em apresentações acadêmicas festivas.",
+      "url": "https://d1135f49d6br9m.cloudfront.net/Logo+Bateria.png",
+      "instagram": "https://www.instagram.com/bateriamauaclubedamanga/"
+	},
+	{
+	  "id": 19,
+      "name": "Red Ghosts Mauá",
+      "description": "O cheerleading é um esporte que combina dança, acrobacias e trabalho em equipe. O time universitário Red Ghosts, fundado em 2014, sempre foi exclusivamente feminino, mas em 2023 se tornou um time COED, incluindo homens e mulheres. A Red Ghosts está unindo talentos e energias para criar performances ainda mais incríveis, celebrando a tradição do time e abrindo um novo capítulo de inclusão e progresso no cheerleading universitário, dando foco nas competições em que a equipe sempre manteve seu destaque.",
+      "url": "https://d1135f49d6br9m.cloudfront.net/Logo+Red+Ghosts+Mauá.png",
+      "instagram": "https://www.instagram.com/redghosts.maua/"
+	},
+	{
+	  "id": 20,
+      "name": "Coletivo Diversidade",
+      "description": "O Diversidade Mauá é um coletivo voltado para inclusão de pessoas de diversas etnias, gêneros, sexualidades e PCD`s, assim tornando-a um local muito mais acolhedor e amigável.",
+      "url": "https://d1135f49d6br9m.cloudfront.net/Logo Diversidade Mauá.png",
+      "instagram": "https://www.instagram.com/diversidademaua/"
+	},
+	{
+	  "id": 21,
+      "name": "Enactus Mauá",
+      "description": "A Enactus Mauá é parte de uma organização internacional sem fins lucrativos, presente em 35 países, dedicada a inspirar jovens universitários a melhorar o mundo através da Ação Empreendedora. Com o papel de conectar o mundo corporativo e o mundo acadêmico,о resultado desse trabalho são soluções de impacto socioambiental para comunidades, empresas parceiras, e a formação de novas gerações de lideres comprometidos em construir um mundo melhor e um país mais justo.",
+      "url": "https://d1135f49d6br9m.cloudfront.net/Enactus+Mauá.png",
+      "instagram": "https://www.instagram.com/enactusmaua/"
+	}
+]
