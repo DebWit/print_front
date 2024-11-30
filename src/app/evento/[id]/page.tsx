@@ -20,6 +20,9 @@ export default function Evento() {
             setLoading(false);
             setSubscribed(!subscribed);
         }, 2500);
+        setTimeout(() => {
+            window.location.reload();
+        }, 4000)
     };
 
     // Updated event object format
@@ -29,7 +32,8 @@ export default function Evento() {
         banner: "/login-background.png",
         description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam nec purus ac turpis tincidunt.",
         start_date: new Date(1732725960 * 1000),
-        end_date: new Date(1734725960 * 1000), 
+        end_date: new Date(1734725960 * 1000),
+        rooms: { "H204": 30, "H205" : 15}, 
     };
 
     const handleToggleDescription = () => {
@@ -55,12 +59,12 @@ export default function Evento() {
                             <span className="text-right w-full pr-2">{event.start_date.toLocaleDateString()}</span>
                         </div>
                     </div>
-                    {/* <div className="flex w-full justify-content-center mt-2">
+                    { Object.keys(event.rooms).length === 1 ? (<div className="flex w-full justify-content-center mt-2">
                         <div className="md:max-w-20rem col-9 flex border-round text-2xl align-items-center" style={{ color: "#FFF",  backgroundColor: "#F9A818" }}>
                             <i className="pi pi-map-marker text-3xl pl-1"></i>
-                            <span className="text-right w-full pr-2">{event.location}</span>
+                            <span className="text-right w-full pr-2">{Object.keys(event.rooms)[0]}</span>
                         </div>
-                    </div> */}
+                    </div>) : (<></>) }
                     <div className="flex">
                         <p className="text-white text-justify p-4 text-2xl">
                             {isExpanded
