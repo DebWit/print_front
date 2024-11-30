@@ -26,6 +26,10 @@ export default function Evento() {
     };
 
     // Updated event object format
+    const member = {
+        event: "550e8400-e29b-41d4-a716-446655440000",
+        room: "J302"
+    }
     const event = {
         event_id: "550e8400-e29b-41d4-a716-446655440000",
         name: "Evento de Teste bemmmmm longoo",
@@ -59,10 +63,13 @@ export default function Evento() {
                             <span className="text-right w-full pr-2">{event.start_date.toLocaleDateString()}</span>
                         </div>
                     </div>
-                    { Object.keys(event.rooms).length === 1 ? (<div className="flex w-full justify-content-center mt-2">
+                    { Object.keys(event.rooms).length === 1 || subscribed? (<div className="flex w-full justify-content-center mt-2">
                         <div className="md:max-w-20rem col-9 flex border-round text-2xl align-items-center" style={{ color: "#FFF",  backgroundColor: "#F9A818" }}>
                             <i className="pi pi-map-marker text-3xl pl-1"></i>
-                            <span className="text-right w-full pr-2">{Object.keys(event.rooms)[0]}</span>
+                            <span className="text-right w-full pr-2">{
+                                member.event === id && subscribed ? member.room :
+                                Object.keys(event.rooms)[0]
+                                }</span>
                         </div>
                     </div>) : (<></>) }
                     <div className="flex">
