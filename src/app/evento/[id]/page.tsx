@@ -2,8 +2,7 @@
 import Navbar from "../../components/Navbar";
 import BottomBar from "@/app/components/BottomBar";
 import { useParams } from "next/navigation";
-import "./style.css";
-import { start } from "repl";
+import "../style.css";
 import { useState } from "react";
 import { Button } from 'primereact/button';
 
@@ -14,7 +13,6 @@ export default function Evento() {
     const [loading, setLoading] = useState(false);
     const [subscribed, setSubscribed] = useState(false);
     
-
     const load = () => {
         setLoading(true);
 
@@ -24,15 +22,15 @@ export default function Evento() {
         }, 2500);
     };
 
+    // Updated event object format
     const event = {
         event_id: "550e8400-e29b-41d4-a716-446655440000",
         name: "Evento de Teste bemmmmm longoo",
-        event_photo: "/login-background.png",
-        description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam nec purus ac turpis tincidunt. Sed nec semper metus. consectetur adipiscing elit. Nullam nec purus ac turpis tincidunt. Sed nec semper metus",
-        start: "7:40",
-        end: "8:40",
-        location: "CEAF",
-    }
+        banner: "/login-background.png",
+        description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam nec purus ac turpis tincidunt.",
+        start_date: new Date(1732725960 * 1000),
+        end_date: new Date(1734725960 * 1000), 
+    };
 
     const handleToggleDescription = () => {
         setIsExpanded(!isExpanded);
@@ -44,25 +42,25 @@ export default function Evento() {
             <div className="flex w-full justify-content-center">
                 <div className="md:col-6 col-12 p-0 ">
                     <div className="p-2 px-2 my-2 text-center text-3xl" style={{ color: "#fff" }}>{event.name}</div>
-                    <img src="/login-background.png" alt="Foto do evento" className="w-full md:border-round" style={{ aspectRatio: "18/9" }} />
+                    <img src={event.banner} alt="Foto do evento" className="w-full md:border-round" style={{ aspectRatio: "18/9" }} />
                     <div className="flex w-full justify-content-center mt-3">
                         <div className="md:max-w-20rem col-9 flex border-round text-2xl align-items-center" style={{ color: "#FFF",  backgroundColor: "#D22626" }}>
                             <i className="pi pi-clock text-3xl pl-1"></i>
-                            <span className="text-right w-full pr-2">{event.start} - {event.end}</span>
+                            <span className="text-right w-full pr-2">{event.start_date.toLocaleTimeString()} - {event.end_date.toLocaleTimeString()}</span>
                         </div>
                     </div>
                     <div className="flex w-full justify-content-center mt-2">
                         <div className="md:max-w-20rem col-9 flex border-round text-2xl align-items-center" style={{ color: "#FFF",  backgroundColor: "#248CB5" }}>
                             <i className="pi pi-calendar text-3xl pl-1"></i>
-                            <span className="text-right w-full pr-2">{event.start}</span>
+                            <span className="text-right w-full pr-2">{event.start_date.toLocaleDateString()}</span>
                         </div>
                     </div>
-                    <div className="flex w-full justify-content-center mt-2">
+                    {/* <div className="flex w-full justify-content-center mt-2">
                         <div className="md:max-w-20rem col-9 flex border-round text-2xl align-items-center" style={{ color: "#FFF",  backgroundColor: "#F9A818" }}>
                             <i className="pi pi-map-marker text-3xl pl-1"></i>
                             <span className="text-right w-full pr-2">{event.location}</span>
                         </div>
-                    </div>
+                    </div> */}
                     <div className="flex">
                         <p className="text-white text-justify p-4 text-2xl">
                             {isExpanded

@@ -10,7 +10,7 @@ import "./style.css";
 
 export default function Homepage(){
 
-    const isAdmin = true;
+    const isAdmin = false;
 
     let dados = [
         {
@@ -42,11 +42,11 @@ export default function Homepage(){
             link: "/notificacoes"
         },
         {
-            text: "Mapa",
-            icon: "pi pi-map",
+            text: "Entidades",
+            icon: "pi pi-users",
             inverted: false,
             backgroundImage: "/home-1.png",
-            link: "/mapa"
+            link: "/entidades"
         },
     ]
 
