@@ -10,7 +10,7 @@ import "./style.css";
 
 export default function Homepage(){
 
-    const isAdmin = false;
+    const isAdmin = true;
 
     let dados = [
         {

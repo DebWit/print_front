@@ -7,12 +7,17 @@ import Navbar from '@/app/components/Navbar';
 import './style.css';
 import { FloatLabel } from 'primereact/floatlabel';
 
-export default function GerenciarNotificacoes() {
+export default function CriarNotificacao() {
     const [formData, setFormData] = useState({
         notification_id: '',
         title: '',
         description: '',
         timestamp: 0,
+    });
+
+    const [errors, setErrors] = useState({
+        title: '',
+        description: '',
     });
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -23,13 +28,16 @@ export default function GerenciarNotificacoes() {
         }));
     };
 
+    const validateForm = () => {
+        const newErrors: any = {};
+        if (!formData.title) newErrors.title = 'Título é obrigatório.';
+        if (!formData.description) newErrors.description = 'Descrição é obrigatória.';
+        setErrors(newErrors);
+        return Object.keys(newErrors).length === 0;
+    };
+
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        const timestamp = Math.floor(Date.now() / 1000);
-        setFormData((prev) => ({
-            ...prev,
-            timestamp,
-        }));
     };
 
     return (
@@ -47,6 +55,7 @@ export default function GerenciarNotificacoes() {
                             placeholder="Digite o título da notificação"
                         />
                     </div>
+                        {errors.title && <small className="ml-2 p-error">{errors.title}</small>}
                     <div className="form-group col-12 mb-3 mt-4">
                         <FloatLabel>
                             <InputTextarea
@@ -60,6 +69,7 @@ export default function GerenciarNotificacoes() {
                             />
                             <label htmlFor="description">Descrição</label>
                         </FloatLabel>
+                        {errors.description && <small className="p-error">{errors.description}</small>}
                     </div>
                     <div className="form-group flex justify-content-end">
                         <Button label="Adicionar Notificação" type="submit" />

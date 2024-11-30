@@ -27,6 +27,12 @@ export default function GerenciarEntidade() {
     };
 
     const [data, setData] = useState(current_data);
+    const [errors, setErrors] = useState({
+        name: "",
+        description: "",
+        url: "",
+        instagram: "",
+    });
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
@@ -44,6 +50,18 @@ export default function GerenciarEntidade() {
                 [fieldName]: URL.createObjectURL(file),
             }));
         }
+    };
+
+    const validateForm = () => {
+        const newErrors: any = {};
+
+        if (!data.name) newErrors.name = 'Nome da entidade é obrigatório.';
+        if (!data.description) newErrors.description = 'Descrição da entidade é obrigatória.';
+        if (!data.url) newErrors.url = 'Foto da entidade é obrigatória.';
+        if (!data.instagram) newErrors.instagram = 'Instagram é obrigatório.';
+
+        setErrors(newErrors);
+        return Object.keys(newErrors).length === 0;
     };
 
     const handleSubmit = (e: React.FormEvent) => {
@@ -65,6 +83,7 @@ export default function GerenciarEntidade() {
                             />
                             <label htmlFor="name">Nome da Entidade</label>
                         </FloatLabel>
+                        {errors.name && <small className="ml-2 p-error">{errors.name}</small>}
                     </div>
                     <div className="form-group mb-3 mt-4">
                         <label htmlFor="url" className="block mb-2">Foto da Entidade</label>
@@ -72,6 +91,7 @@ export default function GerenciarEntidade() {
                             currentPhoto={data.url}
                             onChange={(file: any) => handleFileChange(file, 'url')}
                         />
+                        {errors.url && <small className="ml-2 p-error">{errors.url}</small>}
                     </div>
                     <div className="form-group col-12 mb-3 mt-4">
                         <FloatLabel>
@@ -85,6 +105,7 @@ export default function GerenciarEntidade() {
                             />
                             <label htmlFor="description">Descrição</label>
                         </FloatLabel>
+                        {errors.description && <small className="ml-2 p-error">{errors.description}</small>}
                     </div>
 
                     <div className="form-group mb-3 mt-4">
@@ -97,9 +118,10 @@ export default function GerenciarEntidade() {
                             />
                             <label htmlFor="instagram">Instagram</label>
                         </FloatLabel>
+                        {errors.instagram && <small className="ml-2 p-error">{errors.instagram}</small>}
                     </div>
                     <div className="form-group flex justify-content-end">
-                        <Button label="Submit" type="submit" />
+                        <Button label="Atualizar Entidade" type="submit" />
                     </div>
                 </form>
             </div>

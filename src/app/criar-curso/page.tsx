@@ -14,6 +14,17 @@ export default function CriarCurso() {
         coordinator: "",
         description: "",
         link: "",
+        course_photo: "",
+        coordinator_photo: "",
+    });
+
+    const [errors, setErrors] = useState({
+        name: "",
+        coordinator: "",
+        description: "",
+        link: "",
+        course_photo: "",
+        coordinator_photo: "",
     });
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -32,6 +43,19 @@ export default function CriarCurso() {
                 [fieldName]: URL.createObjectURL(file),
             }));
         }
+    };
+
+    const validateForm = () => {
+        const newErrors: any = {};
+        if (!data.name) newErrors.name = 'Nome do curso é obrigatório.';
+        if (!data.coordinator) newErrors.coordinator = 'Nome do coordenador é obrigatório.';
+        if (!data.description) newErrors.description = 'Descrição do curso é obrigatória.';
+        if (!data.link) newErrors.link = 'Link do curso é obrigatório.';
+        if (!data.course_photo) newErrors.course_photo = 'Foto do curso é obrigatória.';
+        if (!data.coordinator_photo) newErrors.coordinator_photo = 'Foto do coordenador é obrigatória.';
+        
+        setErrors(newErrors);
+        return Object.keys(newErrors).length === 0;
     };
 
     const handleSubmit = (e: React.FormEvent) => {
@@ -54,13 +78,17 @@ export default function CriarCurso() {
                             />
                             <label htmlFor="name">Nome do Curso</label>
                         </FloatLabel>
+                        {errors.name && <small className="ml-2 p-error">{errors.name}</small>}
                     </div>
+
                     <div className="form-group mb-3 mt-4">
                         <label htmlFor="course_photo" className="block mb-2">Foto do Curso</label>
                         <InputPhoto
                             onChange={(file: any) => handleFileChange(file, 'course_photo')}
                         />
+                        {errors.course_photo && <small className="ml-2 p-error">{errors.course_photo}</small>}
                     </div>
+
                     <div className="form-group mb-3 mt-4">
                         <FloatLabel>
                             <InputText
@@ -72,13 +100,17 @@ export default function CriarCurso() {
                             />
                             <label htmlFor="coordinator">Coordenador</label>
                         </FloatLabel>
+                        {errors.coordinator && <small className="ml-2 p-error">{errors.coordinator}</small>}
                     </div>
+
                     <div className="form-group mb-3 mt-4">
                         <label htmlFor="coordinator_photo" className="block mb-2">Foto do Coordenador</label>
                         <InputPhoto
                             onChange={(file: any) => handleFileChange(file, 'coordinator_photo')}
                         />
+                        {errors.coordinator_photo && <small className="ml-2 p-error">{errors.coordinator_photo}</small>}
                     </div>
+
                     <div className="form-group col-12 mb-3 mt-4">
                         <FloatLabel>
                             <InputTextarea
@@ -92,6 +124,7 @@ export default function CriarCurso() {
                             />
                             <label htmlFor="description">Descrição</label>
                         </FloatLabel>
+                        {errors.description && <small className="ml-2 p-error">{errors.description}</small>}
                     </div>
 
                     <div className="form-group mb-3 mt-4">
@@ -105,7 +138,9 @@ export default function CriarCurso() {
                             />
                             <label htmlFor="link">Link</label>
                         </FloatLabel>
+                        {errors.link && <small className="ml-2 p-error">{errors.link}</small>}
                     </div>
+
                     <div className="form-group flex justify-content-end">
                         <Button label="Criar Curso" type="submit" />
                     </div>
