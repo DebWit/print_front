@@ -76,10 +76,10 @@ export default function Homepage(){
             "route": "gerenciar-notificacoes"
         },
         {
-            "name": "Buscar Pessoa",
+            "name": "Listar Pessoas",
             "icon": "pi pi-search",
             "color": "red",
-            "route": "/buscar-pessoa"
+            "route": "/listar-pessoas"
         }
     ]
 
@@ -87,7 +87,7 @@ export default function Homepage(){
         return (
             <div>
                 <Navbar isHome={true} />
-                <div className="grid flex justify-content-center gap-3 mt-4">
+                <div className="grid flex justify-content-center gap-3 mt-4 mx-0">
                     {cards
                         .map((object, i) => (
                             <div key={i} className="col-12 sm:col-6 md:col-4 lg:col-3">

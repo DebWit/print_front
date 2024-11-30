@@ -9,33 +9,29 @@ import React, { useState } from 'react';
 import '../style.css';
 import { Button } from "primereact/button";
 
-export default function GerenciarCurso() {
+export default function GerenciarEntidade() {
     const { id } = useParams();
-    const ida = '3d9221a7-ef6b-4b6a-90ed-aa6de72c5504';
+    const stuOrgId = "5fa85f64-5717-4562-b3fc-2c963f66afa8";
 
-    if (id !== ida) {
-        return <div>Curso não encontrado!</div>;
+    if (id !== stuOrgId) {
+        return <div>Entidade não encontrada!</div>;
     }
 
     const current_data = {
-        course_id: '3d9221a7-ef6b-4b6a-90ed-aa6de72c5504',
-        name: "Ciência da Computação",
-        course_photo: "/background-splash.png",
-        coordinator: "Rudolf Theoderich Bühler",
-        coordinator_photo: "/background-splash.png",
+        stu_org_id: "5fa85f64-5717-4562-b3fc-2c963f66afa8",
+        name: "Mauá Racing",
         description:
-            "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Laborum, perspiciatis! Lorem ipsum dolor sit amet consectetur, adipisicing elit. Aperiam velit similique laborum dolorem id ipsum beatae ipsa. Mollitia, facere! Lorem ipsum dolor sit amet consectetur, adipisicing elit. Reprehenderit, enim.",
-        link: "maua.br",
+            "A equipe constitui-se como uma empresa estudantil de automobilismo. Os estudantes projetam, constroem e competem com um veículo de alta performance do tipo fórmula, utilizando um motor de até 710 cilindradas. Durante quatro dias de competição pela SAE Brasil, as equipes realizam provas estáticas e provas dinâmicas. O 1º e 2º colocados conquistam o direito de representar o Brasil na Fórmula SAE nos EUA.",
+        url: "https://d1135f49d6br9m.cloudfront.net/Mauá Racing Fórmula.jpg",
+        instagram: "https://www.instagram.com/mauaracing/"
     };
 
     const [data, setData] = useState(current_data);
     const [errors, setErrors] = useState({
         name: "",
-        coordinator: "",
         description: "",
-        link: "",
-        course_photo: "",
-        coordinator_photo: "",
+        url: "",
+        instagram: "",
     });
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -59,12 +55,10 @@ export default function GerenciarCurso() {
     const validateForm = () => {
         const newErrors: any = {};
 
-        if (!data.name) newErrors.name = 'Nome do curso é obrigatório.';
-        if (!data.coordinator) newErrors.coordinator = 'Nome do coordenador é obrigatório.';
-        if (!data.description) newErrors.description = 'Descrição do curso é obrigatória.';
-        if (!data.link) newErrors.link = 'Link do curso é obrigatório.';
-        if (!data.course_photo) newErrors.course_photo = 'Foto do curso é obrigatória.';
-        if (!data.coordinator_photo) newErrors.coordinator_photo = 'Foto do coordenador é obrigatória.';
+        if (!data.name) newErrors.name = 'Nome da entidade é obrigatório.';
+        if (!data.description) newErrors.description = 'Descrição da entidade é obrigatória.';
+        if (!data.url) newErrors.url = 'Foto da entidade é obrigatória.';
+        if (!data.instagram) newErrors.instagram = 'Instagram é obrigatório.';
 
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
@@ -76,7 +70,7 @@ export default function GerenciarCurso() {
 
     return (
         <>
-            <Navbar text="Gerenciar Curso" anchor="/gerenciar-cursos" />
+            <Navbar text="Gerenciar Entidade" anchor="/gerenciar-entidades" />
             <div className="grid justify-content-center px-4 mt-3 mx-0">
                 <form className="lg:col-4 col-12 p-4 shadow-2 border-round" onSubmit={handleSubmit}>
                     <div className="form-group mb-3 mt-4">
@@ -87,37 +81,17 @@ export default function GerenciarCurso() {
                                 value={data.name}
                                 onChange={handleChange}
                             />
-                            <label htmlFor="name">Nome do Curso</label>
+                            <label htmlFor="name">Nome da Entidade</label>
                         </FloatLabel>
                         {errors.name && <small className="ml-2 p-error">{errors.name}</small>}
                     </div>
                     <div className="form-group mb-3 mt-4">
-                        <label htmlFor="course_photo" className="block mb-2">Foto do Curso</label>
+                        <label htmlFor="url" className="block mb-2">Foto da Entidade</label>
                         <InputPhoto
-                            currentPhoto={data.course_photo}
-                            onChange={(file: any) => handleFileChange(file, 'course_photo')}
+                            currentPhoto={data.url}
+                            onChange={(file: any) => handleFileChange(file, 'url')}
                         />
-                        {errors.course_photo && <small className="ml-2 p-error">{errors.course_photo}</small>}
-                    </div>
-                    <div className="form-group mb-3 mt-4">
-                        <FloatLabel>
-                            <InputText
-                                id="coordinator"
-                                name="coordinator"
-                                value={data.coordinator}
-                                onChange={handleChange}
-                            />
-                            <label htmlFor="coordinator">Coordenador</label>
-                        </FloatLabel>
-                        {errors.coordinator && <small className="ml-2 p-error">{errors.coordinator}</small>}
-                    </div>
-                    <div className="form-group mb-3 mt-4">
-                        <label htmlFor="coordinator_photo" className="block mb-2">Foto do Coordenador</label>
-                        <InputPhoto
-                            currentPhoto={data.coordinator_photo}
-                            onChange={(file: any) => handleFileChange(file, 'coordinator_photo')}
-                        />
-                        {errors.coordinator_photo && <small className="ml-2 p-error">{errors.coordinator_photo}</small>}
+                        {errors.url && <small className="ml-2 p-error">{errors.url}</small>}
                     </div>
                     <div className="form-group col-12 mb-3 mt-4">
                         <FloatLabel>
@@ -137,17 +111,17 @@ export default function GerenciarCurso() {
                     <div className="form-group mb-3 mt-4">
                         <FloatLabel>
                             <InputText
-                                id="link"
-                                name="link"
-                                value={data.link}
+                                id="instagram"
+                                name="instagram"
+                                value={data.instagram}
                                 onChange={handleChange}
                             />
-                            <label htmlFor="link">Link</label>
+                            <label htmlFor="instagram">Instagram</label>
                         </FloatLabel>
-                        {errors.link && <small className="ml-2 p-error">{errors.link}</small>}
+                        {errors.instagram && <small className="ml-2 p-error">{errors.instagram}</small>}
                     </div>
                     <div className="form-group flex justify-content-end">
-                        <Button label="Atualizar Curso" type="submit" />
+                        <Button label="Atualizar Entidade" type="submit" />
                     </div>
                 </form>
             </div>

@@ -39,11 +39,10 @@ export default function InputPhoto({ currentPhoto, onChange }: InputPhotoProps) 
     };
 
     const headerTemplate = (options: FileUploadHeaderTemplateOptions) => {
-        const { className, chooseButton, cancelButton } = options;
+        const { className, chooseButton} = options;
         return (
             <div className={className} style={{ backgroundColor: 'transparent', display: 'flex', alignItems: 'center' }}>
                 {chooseButton}
-                {cancelButton}
             </div>
         );
     };
@@ -78,14 +77,12 @@ export default function InputPhoto({ currentPhoto, onChange }: InputPhotoProps) 
     };
 
     const chooseOptions = { icon: 'pi pi-fw pi-images', iconOnly: true, className: 'custom-choose-btn p-button-rounded p-button-outlined' };
-    const cancelOptions = { icon: 'pi pi-fw pi-times', iconOnly: true, className: 'custom-cancel-btn p-button-danger p-button-rounded p-button-outlined' };
 
     return (
         <div>
             <Toast ref={toast}></Toast>
 
             <Tooltip target=".custom-choose-btn" content="Choose" position="bottom" />
-            <Tooltip target=".custom-cancel-btn" content="Clear" position="bottom" />
 
             <FileUpload
                 ref={fileUploadRef}
@@ -98,7 +95,6 @@ export default function InputPhoto({ currentPhoto, onChange }: InputPhotoProps) 
                 itemTemplate={itemTemplate}
                 emptyTemplate={emptyTemplate}
                 chooseOptions={chooseOptions}
-                cancelOptions={cancelOptions}
                 maxfiles={1}
             />
         </div>
