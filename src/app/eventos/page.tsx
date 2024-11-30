@@ -11,254 +11,64 @@ import { Button } from "primereact/button";
 import "./style.css";
 let hook: React.Dispatch<React.SetStateAction<number>>;
 export default function Evento() {
-    const days: Array<string> = ["SEG", "TER", "QUA", "QUI", "SEX"];
     const [search, setSearch] = useState('');
     const [items, setItems] = useState<string[]>([]);
     const [actualDay, setActualDay] = useState(-1);
-    const [events, setEvents] = useState<{ title: string; startTime: string; endTime: string; location: string; anchor: string; }[]>([]);
+    const [events, setEvents] = useState<{ title: string; start_date: string; end_date: string; location: string; anchor: string; }[]>([]);
     hook = setActualDay as React.Dispatch<React.SetStateAction<number>>;
-    useEffect(() => {
-        if (actualDay === -1) {
-            setActualDay(todayDay);
+
+    const dayOfWeek = (date: Date) => {
+        let data = new Date();
+        let dia = data.getDay();
+        if (dia <= 1 || dia >= 6) {
+            return 0
         }
-        if (actualDay >= 0 && actualDay < days.length) {
-            setEvents(eventos[days[actualDay]]);
+        return date.getDay();
+    }
+
+    useEffect(() => {
+        if (actualDay === -1)
+            setActualDay(todayDay)
+        if (actualDay >= 0) {
+            // Filtra eventos pelo dia selecionado
+            const filteredEvents = eventos.filter(
+                event => dayOfWeek(event.start_date) === actualDay
+            );
+            setEvents(filteredEvents);
         }
     }, [actualDay]);
 
     useEffect(() => {
-        if (search === '') 
-            setEvents(eventos[days[actualDay]]);
-        else 
-            setEvents(eventos[days[actualDay]].filter((event) => event.title.toLowerCase().includes(search.toLowerCase())));
+        if (search === '') {
+            // Mostra todos os eventos do dia selecionado
+            setEvents(eventos.filter(event => dayOfWeek(event.start_date) === actualDay));
+        } else {
+            // Filtra eventos pelo texto de busca
+            const filteredEvents = eventos.filter(
+                event =>
+                    dayOfWeek(event.start_date) === actualDay &&
+                    event.title.toLowerCase().includes(search.toLowerCase())
+            );
+            setEvents(filteredEvents);
+        }
     }, [search, actualDay]);
 
-    const eventos: { [key: string]: { title: string; startTime: string; endTime: string; location: string; anchor: string; }[] } = {
-        "SEG": [{
-            "title": "Seg",
-            "startTime": "7:40",
-            "endTime": "8:40",
-            "location": "CEAF",
-            "anchor": "/evento/550e8400-e29b-41d4-a716-446655440000"
+    const eventos: { title: string; start_date: Date; end_date: Date; rooms: Object; anchor: string; }[] = [
+        {
+            title: "Seg",
+            start_date: new Date(1732995735092),
+            end_date: new Date(1732995735092),
+            anchor: "/evento/550e8400-e29b-41d4-a716-446655440000",
+            rooms: { "H204": 30, "H205": 40 },
         },
         {
-            "title": "Lorem Ipsum",
-            "startTime": "7:40",
-            "endTime": "8:40",
-            "location": "CEAF",
-            "anchor": "/evento/550e8400-e29b-41d4-a716-446655440000"
+            title: "Lorem Ipsum",
+            start_date: new Date(1732995735092),
+            end_date: new Date(1732995735092 * 1000),
+            anchor: "/evento/550e8400-e29b-41d4-a716-446655440000",
+            rooms: { "H204": 30 },
         },
-        {
-            "title": "Lorem Ipsum",
-            "startTime": "7:40",
-            "endTime": "8:40",
-            "location": "CEAF",
-            "anchor": "/evento/550e8400-e29b-41d4-a716-446655440000"
-        },
-        {
-            "title": "Lorem Ipsum",
-            "startTime": "7:40",
-            "endTime": "8:40",
-            "location": "CEAF",
-            "anchor": "/evento/550e8400-e29b-41d4-a716-446655440000"
-        },
-        {
-            "title": "Lorem Ipsum",
-            "startTime": "7:40",
-            "endTime": "8:40",
-            "location": "CEAF",
-            "anchor": "/evento/550e8400-e29b-41d4-a716-446655440000"
-        },
-        {
-            "title": "Lorem Ipsum",
-            "startTime": "7:40",
-            "endTime": "8:40",
-            "location": "CEAF",
-            "anchor": "/evento/550e8400-e29b-41d4-a716-446655440000"
-        },
-        {
-            "title": "Lorem Ipsum",
-            "startTime": "7:40",
-            "endTime": "8:40",
-            "location": "CEAF",
-            "anchor": "/evento/550e8400-e29b-41d4-a716-446655440000"
-        }],
-        "TER": [{
-            "title": "Ter",
-            "startTime": "7:40",
-            "endTime": "8:40",
-            "location": "CEAF",
-            "anchor": "/evento/550e8400-e29b-41d4-a716-446655440000"
-        },
-        {
-            "title": "Lorem Ipsum",
-            "startTime": "7:40",
-            "endTime": "8:40",
-            "location": "CEAF",
-            "anchor": "/evento/550e8400-e29b-41d4-a716-446655440000"
-        },
-        {
-            "title": "Lorem Ipsum",
-            "startTime": "7:40",
-            "endTime": "8:40",
-            "location": "CEAF",
-            "anchor": "/evento/550e8400-e29b-41d4-a716-446655440000"
-        },
-        {
-            "title": "Lorem Ipsum",
-            "startTime": "7:40",
-            "endTime": "8:40",
-            "location": "CEAF",
-            "anchor": "/evento/550e8400-e29b-41d4-a716-446655440000"
-        }],
-        "QUA": [{
-            "title": "Qua",
-            "startTime": "7:40",
-            "endTime": "8:40",
-            "location": "CEAF",
-            "anchor": "/evento/550e8400-e29b-41d4-a716-446655440000"
-        },
-        {
-            "title": "Lorem Ipsum",
-            "startTime": "7:40",
-            "endTime": "8:40",
-            "location": "CEAF",
-            "anchor": "/evento/550e8400-e29b-41d4-a716-446655440000"
-        },
-        {
-            "title": "Lorem Ipsum",
-            "startTime": "7:40",
-            "endTime": "8:40",
-            "location": "CEAF",
-            "anchor": "/evento/550e8400-e29b-41d4-a716-446655440000"
-        },
-        {
-            "title": "Lorem Ipsum",
-            "startTime": "7:40",
-            "endTime": "8:40",
-            "location": "CEAF",
-            "anchor": "/evento/550e8400-e29b-41d4-a716-446655440000"
-        },
-        {
-            "title": "Lorem Ipsum",
-            "startTime": "7:40",
-            "endTime": "8:40",
-            "location": "CEAF",
-            "anchor": "/evento/550e8400-e29b-41d4-a716-446655440000"
-        },
-        {
-            "title": "Lorem Ipsum",
-            "startTime": "7:40",
-            "endTime": "8:40",
-            "location": "CEAF",
-            "anchor": "/evento/550e8400-e29b-41d4-a716-446655440000"
-        },
-        {
-            "title": "Lorem Ipsum",
-            "startTime": "7:40",
-            "endTime": "8:40",
-            "location": "CEAF",
-            "anchor": "/evento/550e8400-e29b-41d4-a716-446655440000"
-        },
-        {
-            "title": "Lorem Ipsum",
-            "startTime": "7:40",
-            "endTime": "8:40",
-            "location": "CEAF",
-            "anchor": "/evento/550e8400-e29b-41d4-a716-446655440000"
-        },
-        {
-            "title": "Lorem Ipsum",
-            "startTime": "7:40",
-            "endTime": "8:40",
-            "location": "CEAF",
-            "anchor": "/evento/550e8400-e29b-41d4-a716-446655440000"
-        },
-        {
-            "title": "Lorem Ipsum",
-            "startTime": "7:40",
-            "endTime": "8:40",
-            "location": "CEAF",
-            "anchor": "/evento/550e8400-e29b-41d4-a716-446655440000"
-        },
-        {
-            "title": "Lorem Ipsum",
-            "startTime": "7:40",
-            "endTime": "8:40",
-            "location": "CEAF",
-            "anchor": "/evento/550e8400-e29b-41d4-a716-446655440000"
-        },
-        {
-            "title": "Lorem Ipsum",
-            "startTime": "7:40",
-            "endTime": "8:40",
-            "location": "CEAF",
-            "anchor": "/evento/550e8400-e29b-41d4-a716-446655440000"
-        }],
-        "QUI": [{
-            "title": "Qui",
-            "startTime": "7:40",
-            "endTime": "8:40",
-            "location": "CEAF",
-            "anchor": "/evento/550e8400-e29b-41d4-a716-446655440000"
-        },
-        {
-            "title": "Lorem Ipsum",
-            "startTime": "7:40",
-            "endTime": "8:40",
-            "location": "CEAF",
-            "anchor": "/evento/550e8400-e29b-41d4-a716-446655440000"
-        },
-        {
-            "title": "Lorem Ipsum",
-            "startTime": "7:40",
-            "endTime": "8:40",
-            "location": "CEAF",
-            "anchor": "/evento/550e8400-e29b-41d4-a716-446655440000"
-        },
-        {
-            "title": "Lorem Ipsum",
-            "startTime": "7:40",
-            "endTime": "8:40",
-            "location": "CEAF",
-            "anchor": "/evento/550e8400-e29b-41d4-a716-446655440000"
-        }],
-        "SEX": [{
-            "title": "Sex",
-            "startTime": "7:40",
-            "endTime": "8:40",
-            "location": "CEAF",
-            "anchor": "/evento/550e8400-e29b-41d4-a716-446655440000"
-        },
-        {
-            "title": "Lorem Ipsum",
-            "startTime": "7:40",
-            "endTime": "8:40",
-            "location": "CEAF",
-            "anchor": "/evento/550e8400-e29b-41d4-a716-446655440000"
-        },
-        {
-            "title": "Lorem Ipsum",
-            "startTime": "7:40",
-            "endTime": "8:40",
-            "location": "CEAF",
-            "anchor": "/evento/550e8400-e29b-41d4-a716-446655440000"
-        },
-        {
-            "title": "Lorem Ipsum",
-            "startTime": "7:40",
-            "endTime": "8:40",
-            "location": "CEAF",
-            "anchor": "/evento/550e8400-e29b-41d4-a716-446655440000"
-        },
-        {
-            "title": "Lorem Ipsum",
-            "startTime": "7:40",
-            "endTime": "8:40",
-            "location": "CEAF",
-            "anchor": "/evento/550e8400-e29b-41d4-a716-446655440000"
-        }],
-    }
+    ];
 
     return (
         <>
@@ -266,7 +76,7 @@ export default function Evento() {
             <div className="w-full flex justify-content-center md:mx-0">
                 <div className="p-inputgroup md:col-6 col-12 h-4rem mx-3">
                     <InputText placeholder="Pesquise aqui" value={search} onChange={(e) => setSearch(e.target.value)} />
-                    <Button icon="pi pi-times text-xl" className="p-button-secondary" onClick={() => setSearch("")}/>
+                    <Button icon="pi pi-times text-xl" className="p-button-secondary" onClick={() => setSearch("")} />
                 </div>
             </div>
             <div className="w-full flex justify-content-center">
@@ -275,7 +85,7 @@ export default function Evento() {
             <div className="w-full flex justify-content-center mt-3">
                 <div className="grid md:col-10 col-12 md:gap-3 gap-1 justify-content-center">
                     {events && events.map((event, index) => (
-                        <EventButton key={index} index={index + actualDay * 2} title={event.title} startTime={event.startTime} endTime={event.endTime} location={event.location} anchor={event.anchor}></EventButton>
+                        <EventButton key={index} index={index + actualDay * 2} title={event.title} startTime={event.start_date.toLocaleTimeString()} endTime={event.end_date.toLocaleTimeString()} location={event.rooms} anchor={event.anchor}></EventButton>
                     ))}
                 </div>
             </div>
