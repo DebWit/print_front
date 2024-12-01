@@ -13,7 +13,7 @@ export default function Cursos() {
   useEffect(() => {
     const fetchCourses = async () => {
       try {
-        const token = localStorage.getItem("msal_access_token");
+        const token = sessionStorage.getItem("msal_access_token");
         if (!token) {
           throw new Error("Token não encontrado. O usuário precisa estar autenticado.");
         }
