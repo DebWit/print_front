@@ -13,7 +13,15 @@ export default function Cursos() {
   useEffect(() => {
     const fetchCourses = async () => {
       try {
-        const response = await axios.get("https://fkohtz7d4a.execute-api.sa-east-1.amazonaws.com/prod/courses");
+        const token = localStorage.getItem("msal_access_token");
+        if (!token) {
+          throw new Error("Token não encontrado. O usuário precisa estar autenticado.");
+        }
+        const response = await axios.get("https://fkohtz7d4a.execute-api.sa-east-1.amazonaws.com/prod/courses", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
         setDados(response.data);
       } catch (err: any) {
         setError(err.response ? err.response.data.message : err.message);
@@ -26,7 +34,7 @@ export default function Cursos() {
   }, []);
 
   return (
-    <>      
+    <>
       <Navbar text="Cursos de Graduação" anchor="/home" />
       <div className="grid flex flex-row justify-content-center m-0">
         {loading && <p>Carregando Cursos...</p>}
