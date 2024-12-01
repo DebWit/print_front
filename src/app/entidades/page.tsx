@@ -9,7 +9,7 @@ import "./style.css";
 export default function Entidade() {
   const dados = entidades.map((entidade) => ({
       ...entidade,
-      course_photo: entidade.url, // Ajuste para usar o campo esperado no CardPadrao
+      course_photo: entidade.url,
   }));
 
   return (

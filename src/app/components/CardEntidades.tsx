@@ -8,9 +8,9 @@ export default function CardPadrao({ dados }: { dados: any }) {
             alt="Card"
             src={dados.course_photo}
             style={{
-                width: "100%", // Ajusta a largura
-                height: "200px", // Define uma altura fixa
-                objectFit: "cover", // Garante que a imagem não distorça
+                width: "100%", 
+                height: "200px", 
+                objectFit: "cover",
             }}
         />
     );
@@ -50,12 +50,12 @@ export default function CardPadrao({ dados }: { dados: any }) {
             style={{
                 display: "flex",
                 flexDirection: "column",
-                height: "350px", // Altura fixa do card
-                width: "100%", // Largura ajustável conforme o grid
-                maxWidth: "300px", // Limite máximo de largura
+                height: "350px",
+                width: "100%",
+                maxWidth: "300px", 
                 border: "1px solid #ccc",
                 borderRadius: "8px",
-                overflow: "hidden", // Evita overflow dos elementos
+                overflow: "hidden",
             }}
         >
             <Card
