@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev -p 3001",
     "devmobile": "next dev -H 0.0.0.0 -p $PORT",
     "build": "next build",
     "start": "next start -p $PORT",
@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@azure/msal-browser": "^3.27.0",
+    "@azure/msal-react": "^2.2.0",
     "next": "15.0.2",
     "prime": "^0.3.2",
     "primeflex": "^3.3.1",

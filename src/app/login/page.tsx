@@ -1,40 +1,39 @@
 'use client';
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { Button } from "primereact/button";
-import { PublicClientApplication } from "@azure/msal-browser";
-import { msalConfig, loginRequest } from "../../msalConfig";
+import { getMsalInstance } from "../../msalInstance";
+import { loginRequest } from "../../msalConfig";
 import "./style.css";
 
-const msalInstance = new PublicClientApplication(msalConfig);
-
 export default function Login() {
-    const [isInitialized, setIsInitialized] = useState(false);
+    const router = useRouter();
 
     useEffect(() => {
-        const initializeMSAL = async () => {
+        const checkAuthentication = async () => {
             try {
-                await msalInstance.initialize();
-                setIsInitialized(true);
+                const msalInstance = await getMsalInstance();
+                const accounts = msalInstance.getAllAccounts();
+
+                if (accounts.length > 0) {
+                    console.log("Usuário já autenticado:", accounts[0]);
+                    router.push("/home");
+                }
             } catch (error) {
-                console.error("MSAL initialization failed:", error);
+                console.error("Erro ao verificar autenticação:", error);
             }
         };
-        initializeMSAL();
-    }, []);
+
+        checkAuthentication();
+    }, [router]);
 
     const handleLogin = async () => {
-        if (!isInitialized) {
-            console.error("MSAL is not initialized yet.");
-            return;
-        }
-
         try {
-            const loginResponse = await msalInstance.loginRedirect(loginRequest);
-            console.log("Login successful:", loginResponse);
-            window.location.href = "/home";
+            const msalInstance = await getMsalInstance();
+            await msalInstance.loginRedirect(loginRequest);
         } catch (error) {
-            console.error("Login failed:", error);
+            console.error("Erro ao iniciar o login:", error);
         }
     };
 
@@ -51,7 +50,6 @@ export default function Login() {
                     iconPos="right"
                     className="btn-login px-4 py-3"
                     onClick={handleLogin}
-                    disabled={!isInitialized}
                 />
             </div>
         </div>
