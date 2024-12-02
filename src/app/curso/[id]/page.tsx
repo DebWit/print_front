@@ -62,28 +62,38 @@ export default function Curso() {
   return (
     <>
       <Navbar text={curso.name} anchor="/cursos"></Navbar>
-      <div className="grid">
-        <div className="col-12 flex justify-content-center">
-          <img
-            src={curso.course_photo}
-            alt={`Foto do curso de ${curso.name}`}
-            className="foto-curso"
-          />
-        </div>
-        <div className="md:col-6">
-          <div className="card-container">
-            <img src={curso.coordinator_photo} alt="Coordenador" />
-            <h3>{curso.coordinator}</h3>
-            <p>Coordenador</p>
+      <div className="w-full">
+        <div className="w-full flex flex align-items-center justify-content-center">
+          <div className="md:col-10 col-12 m-0 p-0">
+            <img
+              src={curso.course_photo}
+              alt={`Foto do curso de ${curso.name}`}
+              className="foto-curso w-full md:border-round-xl mt-3"
+            />
           </div>
         </div>
-        <div className="md:col-5">
-          <div className="description-container">
-            <h2 className="header-sobre">Sobre o Curso:</h2>
-            <p>{curso.description}</p>
-            <a href={curso.link} target="_blank" rel="noopener noreferrer">
-              Saiba mais
-            </a>
+        <div className="flex justify-content-center align-items-center">
+          <div className="md:col-10 col-12 md:flex md:justify-content-center gap-3">
+            <div className="md:col-6 col-12 flex justify-content-center align-items-center">
+              <div className="card-container p-4 w-full h-15rem border-round-2xl flex justify-content-center align-items-center md:gap-2 gap-5" style={{ backgroundColor: "#98A7E2", fontFamily: "Arial" }}>
+                <img src={curso.coordinator_photo} alt="Coordenador" className="border-round" style={{ aspectRatio: "3/4" }} />
+                <div className="">
+                  <span className="block font-bold text-2xl mb-2">{curso.coordinator}</span>
+                  <span className="block text-white">Coordenador</span>
+                </div>
+              </div>
+            </div>
+            <div className="md:col-6 col-12 flex justify-content-center align-items-center text-white">
+              <div className="description-container" style={{ fontFamily: "Arial" }}>
+                <h2 className="header-sobre font-normal ml-3 text-3xl font-bold">Sobre o Curso:</h2>
+                <p className="text-xl text-justify mx-2">{curso.description}</p>
+                <div className="w-full flex justify-content-center">
+                  <a href={curso.link} className="p-3 text-xl text-white shadow-2 border-round-xl" style={{ textDecoration: "none", backgroundColor: "#232285" }} target="_blank" rel="noopener noreferrer">
+                    Saiba mais
+                  </a>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
