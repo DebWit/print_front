@@ -30,7 +30,6 @@ export default function Evento() {
         if (actualDay === -1)
             setActualDay(todayDay)
         if (actualDay >= 0) {
-            // Filtra eventos pelo dia selecionado
             const filteredEvents = eventos.filter(
                 event => dayOfWeek(event.start_date) === actualDay
             );
@@ -40,10 +39,8 @@ export default function Evento() {
 
     useEffect(() => {
         if (search === '') {
-            // Mostra todos os eventos do dia selecionado
             setEvents(eventos.filter(event => dayOfWeek(event.start_date) === actualDay));
         } else {
-            // Filtra eventos pelo texto de busca
             const filteredEvents = eventos.filter(
                 event =>
                     dayOfWeek(event.start_date) === actualDay &&

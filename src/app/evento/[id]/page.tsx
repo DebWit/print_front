@@ -25,7 +25,6 @@ export default function Evento() {
         }, 4000)
     };
 
-    // Updated event object format
     const member = {
         event: "550e8400-e29b-41d4-a716-446655440000",
         room: "J302"

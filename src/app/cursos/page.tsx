@@ -22,7 +22,6 @@ export default function Cursos() {
                     throw new Error("Usuário não autenticado. Faça login novamente.");
                 }
 
-                // Obtém o token de acesso
                 const tokenResponse = await msalInstance.acquireTokenSilent({
                     scopes: ["User.Read"],
                     account: accounts[0],
@@ -30,9 +29,8 @@ export default function Cursos() {
 
                 console.log("Access Token:", tokenResponse.accessToken);
 
-                // Faz a solicitação para a API
                 const response = await axios.get(
-                    "https://fkohtz7d4a.execute-api.sa-east-1.amazonaws.com/prod/courses",
+                    "https://fkohtz7d4a.execute-api.sa-east-1.amazonaws.com/prod/get-all-courses",
                     {
                         headers: {
                             Authorization: `Bearer ${tokenResponse.accessToken}`,
