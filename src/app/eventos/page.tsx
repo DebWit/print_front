@@ -18,7 +18,7 @@ export default function Evento() {
     const [search, setSearch] = useState('');
     const [items, setItems] = useState<string[]>([]);
     const [actualDay, setActualDay] = useState(-1);
-    const [events, setEvents] = useState<{ title: string; start_date: string; end_date: string; location: string; anchor: string; }[]>([]);
+    const [events, setEvents] = useState<{ name: string; start_date: string; end_date: string; rooms: string; anchor: string; }[]>([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
     setActualDayHook(setActualDay);
@@ -64,7 +64,7 @@ export default function Evento() {
             const filteredEvents = events.filter(
                 event =>
                     dayOfWeek(new Date(event.start_date)) === actualDay &&
-                    event.title.toLowerCase().includes(search.toLowerCase())
+                    event.name.toLowerCase().includes(search.toLowerCase())
             );
             setEvents(filteredEvents);
         }
@@ -93,11 +93,11 @@ export default function Evento() {
                             <EventButton 
                                 key={index} 
                                 index={index + actualDay * 2} 
-                                title={event.title} 
+                                title={event.name} 
                                 startTime={new Date(event.start_date).toLocaleTimeString()} 
                                 endTime={new Date(event.end_date).toLocaleTimeString()} 
                                 location={event.rooms} 
-                                anchor={event.anchor} 
+                                anchor={`evento/${event.event_id}`} 
                             />
                         ))
                     )}
