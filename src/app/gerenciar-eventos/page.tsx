@@ -1,44 +1,85 @@
 'use client';
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import { getMsalInstance } from "../../msalInstance";
 import Navbar from "../components/Navbar";
 import './style.css';
 
 export default function GerenciarEventos() {
     const [searchTerm, setSearchTerm] = useState("");
-    const [eventos, setEventos] = useState([
-        {
-            event_id: "550e8400-e29b-41d4-a716-446655440000",
-            name: "Evento de Teste bemmmmm longoo",
-            banner: "/login-background.png",
-            description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam nec purus ac turpis tincidunt.",
-            start_date: 1732725960,
-            end_date: 1734725960,
-            rooms: {
-                "H204": 30,
-                "H205": 40,
-                "H206": 40
-            },
-        },
-        {
-            event_id: "650e8400-e29b-41d4-a716-446655440001",
-            name: "Outro Evento de Teste",
-            banner: "/login-background2.png",
-            description: "Descrição de outro evento para teste de funcionalidade.",
-            start_date: 1733725960,
-            end_date: 1735725960,
-            rooms: {
-                "H207": 25,
-                "H208": 35
-            },
-        },
-    ]);
+    const [eventos, setEventos] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+
+    useEffect(() => {
+        const fetchEventos = async () => {
+            try {
+                // Obter a instância do MSAL e o token
+                const msalInstance = await getMsalInstance();
+                const accounts = msalInstance.getAllAccounts();
+
+                if (accounts.length === 0) {
+                    throw new Error("Usuário não autenticado. Faça login novamente.");
+                }
+
+                const tokenResponse = await msalInstance.acquireTokenSilent({
+                    scopes: ["User.Read"],
+                    account: accounts[0],
+                });
+
+                // Realizar a requisição à sua API para obter os eventos
+                const response = await axios.get(
+                    "https://fkohtz7d4a.execute-api.sa-east-1.amazonaws.com/prod/get-all-events",  // Altere para o endpoint correto da sua API
+                    {
+                        headers: {
+                            Authorization: `Bearer ${tokenResponse.accessToken}`,
+                        },
+                    }
+                );
+
+                setEventos(response.data.events);   
+            } catch (err: any) {
+                setError(err.response ? err.response.data.message : err.message);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchEventos();
+    }, []);
 
     const filteredEventos = eventos.filter(evento =>
         evento.name.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
-    const deleteEvent = (event_id) => {
-        setEventos(eventos.filter(evento => evento.event_id !== event_id));
+    const deleteEvent = async (event_id) => {
+        try {
+            const msalInstance = await getMsalInstance();
+            const accounts = msalInstance.getAllAccounts();
+
+            if (accounts.length === 0) {
+                throw new Error("Usuário não autenticado. Faça login novamente.");
+            }
+
+            const tokenResponse = await msalInstance.acquireTokenSilent({
+                scopes: ["User.Read"],
+                account: accounts[0],
+            });
+
+            await axios.post(
+                "https://fkohtz7d4a.execute-api.sa-east-1.amazonaws.com/prod/delete-event",
+                { event_id },
+                {
+                    headers: {
+                        Authorization: `Bearer ${tokenResponse.accessToken}`,
+                    },
+                }
+            );
+
+            setEventos(eventos.filter(evento => evento.event_id !== event_id));
+        } catch (err: any) {
+            setError(err.response ? err.response.data.message : err.message);
+        }
     };
 
     return (
@@ -55,7 +96,9 @@ export default function GerenciarEventos() {
                 <i className="pi pi-search p-3 search-icon"></i>
             </div>
             <div className="grid flex justify-content-center mt-2 mx-0">
-                {filteredEventos.map((evento) => (
+                {loading && <p>Carregando eventos...</p>}
+                {error && <p>Erro ao carregar eventos: {error}</p>}
+                {!loading && !error && filteredEventos.map((evento) => (
                     <div key={evento.event_id} className="col-11 lg:col-8">
                         <div className="p-card">
                             <div className="p-card-body">

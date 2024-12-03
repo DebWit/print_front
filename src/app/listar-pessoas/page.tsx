@@ -1,27 +1,69 @@
 'use client';
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import { getMsalInstance } from "../../msalInstance";
 import Navbar from "../components/Navbar";
 import './style.css';
 
+interface User {
+    member_id: string;
+    name: string;
+    email: string;
+}
+
 export default function GerenciarUsuarios() {
     const [searchTerm, setSearchTerm] = useState("");
-    const [users, setUsers] = useState([
-        {
-            user_id: "d65308fd-6940-4d6d-92b5-6247d8af834a",
-            name: "Mateus Capaldo Martins",
-            email: "22.01082-3@maua.br",
-        },
-        {
-            user_id: "d65308fd-6940-4d6d-92b5-6247d8af834a",
-            name: "Carlos Henrique Lucena Barro",
-            email: "22.01211-7@maua.br",
-        }
-    ]);
+    const [users, setUsers] = useState<User[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
+
+    useEffect(() => {
+        const fetchUsers = async () => {
+            try {
+                const msalInstance = await getMsalInstance();
+                const accounts = msalInstance.getAllAccounts();
+
+                if (accounts.length === 0) {
+                    throw new Error("Usuário não autenticado. Faça login novamente.");
+                }
+
+                const tokenResponse = await msalInstance.acquireTokenSilent({
+                    scopes: ["User.Read"],
+                    account: accounts[0],
+                });
+
+                const response = await axios.get(
+                    `https://fkohtz7d4a.execute-api.sa-east-1.amazonaws.com/prod/get-all-members`,
+                    {
+                        headers: {
+                            Authorization: `Bearer ${tokenResponse.accessToken}`,
+                        },
+                    }
+                );
+
+                setUsers(response.data.members);
+            } catch (err: any) {
+                setError(err.response ? err.response.data.message : err.message);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchUsers();
+    }, []);
 
     const filteredUsers = users.filter(user =>
         user.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
         user.email.toLowerCase().includes(searchTerm.toLowerCase())
     );
+
+    if (loading) {
+        return <p>Carregando usuários...</p>;
+    }
+
+    if (error) {
+        return <p>Erro ao carregar usuários: {error}</p>;
+    }
 
     return (
         <div>
@@ -38,7 +80,7 @@ export default function GerenciarUsuarios() {
             </div>
             <div className="grid flex justify-content-center mt-2 mx-0">
                 {filteredUsers.map((user) => (
-                    <div key={user.user_id} className="col-11 lg:col-7">
+                    <div key={user.member_id} className="col-11 lg:col-7">
                         <div className="p-card">
                             <div className="p-card-body">
                                 <h4>{user.name}</h4>

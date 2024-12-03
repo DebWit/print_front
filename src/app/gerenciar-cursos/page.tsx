@@ -35,7 +35,7 @@ export default function GerenciarCursos() {
                     }
                 );
 
-                setCursos(response.data.courses); // Assumindo que a resposta contém a lista de cursos no campo 'courses'
+                setCursos(response.data.courses); 
             } catch (err: any) {
                 setError(err.response ? err.response.data.message : err.message);
             } finally {
