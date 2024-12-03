@@ -1,14 +1,14 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
 import { InputTextarea } from 'primereact/inputtextarea';
-import { DataTable } from 'primereact/datatable';
-import { Column } from 'primereact/column';
 import Navbar from '@/app/components/Navbar';
 import InputPhoto from '@/app/components/InputPhoto';
-import './style.css';
 import { FloatLabel } from 'primereact/floatlabel';
+import './style.css';
+import axios from 'axios';
+import { getMsalInstance } from '../../msalInstance';
 
 export default function CriarEntidade() {
     const [formData, setFormData] = useState({
@@ -25,6 +25,10 @@ export default function CriarEntidade() {
         url: '',
         instagram: '',
     });
+
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState('');
+
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
@@ -53,8 +57,44 @@ export default function CriarEntidade() {
         return Object.keys(newErrors).length === 0;
     };
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+
+        if (!validateForm()) return;
+
+        setLoading(true);
+        setError('');
+
+        try {
+            const msalInstance = await getMsalInstance();
+            const accounts = msalInstance.getAllAccounts();
+
+            if (accounts.length === 0) {
+                throw new Error("Usuário não autenticado. Faça login novamente.");
+            }
+
+            const tokenResponse = await msalInstance.acquireTokenSilent({
+                scopes: ["User.Read"],
+                account: accounts[0],
+            });
+
+            const response = await axios.post(
+                'https://fkohtz7d4a.execute-api.sa-east-1.amazonaws.com/prod/create-student-organization',
+                { ...formData },
+                {
+                    headers: {
+                        Authorization: `Bearer ${tokenResponse.accessToken}`,
+                    },
+                }
+            );
+
+            console.log('Entidade criada com sucesso:', response.data);
+            alert('Entidade criada com sucesso!');
+        } catch (err: any) {
+            setError(err.response ? err.response.data.message : err.message);
+        } finally {
+            setLoading(false);
+        }
     };
 
     return (
@@ -73,11 +113,13 @@ export default function CriarEntidade() {
                         />
                     </div>
                     {errors.name && <small className="p-error">{errors.name}</small>}
+
                     <div className="form-group mb-3 mt-4">
                         <label htmlFor="url" className="block mb-2">Foto</label>
                         <InputPhoto onChange={handleFileChange} />
                         {errors.url && <small className="p-error">{errors.url}</small>}
                     </div>
+
                     <div className="form-group col-12 mb-3 mt-4">
                         <FloatLabel>
                             <InputTextarea
@@ -93,6 +135,7 @@ export default function CriarEntidade() {
                         </FloatLabel>
                         {errors.description && <small className="p-error">{errors.description}</small>}
                     </div>
+
                     <div className="form-group mb-3 mt-4">
                         <label htmlFor="instagram" className="block mb-2">Instagram</label>
                         <InputText
@@ -104,9 +147,12 @@ export default function CriarEntidade() {
                         />
                     </div>
                     {errors.instagram && <small className="p-error">{errors.instagram}</small>}
+
                     <div className="form-group flex justify-content-end">
-                        <Button label="Adicionar Entidade" type="submit" />
+                        <Button label="Adicionar Entidade" type="submit" disabled={loading} />
                     </div>
+                    {loading && <div>Carregando...</div>}
+                    {error && <div className="p-error">{error}</div>}
                 </form>
             </div>
         </>

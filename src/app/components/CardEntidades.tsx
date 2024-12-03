@@ -6,11 +6,11 @@ export default function CardPadrao({ dados }: { dados: any }) {
     const header = (
         <img
             alt="Card"
-            src={dados.course_photo}
+            src={dados.logo}
             style={{
                 width: "100%", 
                 height: "200px", 
-                objectFit: "cover",
+                objectFit: "contain",
             }}
         />
     );
@@ -27,7 +27,7 @@ export default function CardPadrao({ dados }: { dados: any }) {
                 {dados.name}
             </span>
             <a
-                href={`/entidade/${dados.name
+                href={`/entidade/${dados.stu_org_id
                     .toLowerCase()
                     .normalize("NFD")
                     .replace(/[\u0300-\u036f]/g, "")

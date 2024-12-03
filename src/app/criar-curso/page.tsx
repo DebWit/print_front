@@ -1,12 +1,14 @@
 'use client';
+import { useState } from 'react';
 import { InputTextarea } from "primereact/inputtextarea";
 import { InputText } from "primereact/inputtext";
 import { FloatLabel } from "primereact/floatlabel";
 import Navbar from '@/app/components/Navbar';
 import InputPhoto from '@/app/components/InputPhoto';
-import { useState } from 'react';
-import './style.css';
 import { Button } from "primereact/button";
+import './style.css';
+import axios from 'axios';
+import { getMsalInstance } from '../../msalInstance';
 
 export default function CriarCurso() {
     const [data, setData] = useState({
@@ -26,6 +28,9 @@ export default function CriarCurso() {
         course_photo: "",
         coordinator_photo: "",
     });
+
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState('');
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
@@ -58,8 +63,45 @@ export default function CriarCurso() {
         return Object.keys(newErrors).length === 0;
     };
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+
+        if (!validateForm()) return;
+
+        setLoading(true);
+        setError('');
+
+        try {
+            const msalInstance = await getMsalInstance();
+            const accounts = msalInstance.getAllAccounts();
+
+            if (accounts.length === 0) {
+                throw new Error("Usuário não autenticado. Faça login novamente.");
+            }
+
+            const tokenResponse = await msalInstance.acquireTokenSilent({
+                scopes: ["User.Read"],
+                account: accounts[0],
+            });
+
+            // Enviar os dados para a API do backend
+            const response = await axios.post(
+                'https://fkohtz7d4a.execute-api.sa-east-1.amazonaws.com/prod/create-course',
+                { ...data },
+                {
+                    headers: {
+                        Authorization: `Bearer ${tokenResponse.accessToken}`,
+                    },
+                }
+            );
+
+            console.log('Curso criado com sucesso:', response.data);
+            alert('Curso criado com sucesso!');
+        } catch (err: any) {
+            setError(err.response ? err.response.data.message : err.message);
+        } finally {
+            setLoading(false);
+        }
     };
 
     return (
@@ -142,8 +184,10 @@ export default function CriarCurso() {
                     </div>
 
                     <div className="form-group flex justify-content-end">
-                        <Button label="Criar Curso" type="submit" />
+                        <Button label="Criar Curso" type="submit" disabled={loading} />
                     </div>
+                    {loading && <div>Carregando...</div>}
+                    {error && <div className="p-error">{error}</div>}
                 </form>
             </div>
         </>

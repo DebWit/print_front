@@ -6,6 +6,8 @@ import { InputTextarea } from 'primereact/inputtextarea';
 import Navbar from '@/app/components/Navbar';
 import './style.css';
 import { FloatLabel } from 'primereact/floatlabel';
+import axios from 'axios';
+import { getMsalInstance } from '../../msalInstance';
 
 export default function CriarNotificacao() {
     const [formData, setFormData] = useState({
@@ -19,6 +21,9 @@ export default function CriarNotificacao() {
         title: '',
         description: '',
     });
+
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState('');
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
@@ -36,9 +41,52 @@ export default function CriarNotificacao() {
         return Object.keys(newErrors).length === 0;
     };
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+    
+        if (!validateForm()) return;
+    
+        setLoading(true);
+        setError('');
+    
+        try {
+            const msalInstance = await getMsalInstance();
+            const accounts = msalInstance.getAllAccounts();
+    
+            if (accounts.length === 0) {
+                throw new Error("Usuário não autenticado. Faça login novamente.");
+            }
+    
+            const tokenResponse = await msalInstance.acquireTokenSilent({
+                scopes: ["User.Read"],
+                account: accounts[0],
+            });
+    
+            const notificationData = {
+                ...formData,
+                creation_date: Date.now(), 
+                has_seen: []               
+            };
+    
+            const response = await axios.post(
+                'https://fkohtz7d4a.execute-api.sa-east-1.amazonaws.com/prod/create-notification', 
+                notificationData,
+                {
+                    headers: {
+                        Authorization: `Bearer ${tokenResponse.accessToken}`,
+                    },
+                }
+            );
+    
+            console.log('Notificação criada com sucesso:', response.data);
+            alert('Notificação criada com sucesso!');
+        } catch (err: any) {
+            setError(err.response ? err.response.data.message : err.message);
+        } finally {
+            setLoading(false);
+        }
     };
+    
 
     return (
         <>
@@ -55,7 +103,8 @@ export default function CriarNotificacao() {
                             placeholder="Digite o título da notificação"
                         />
                     </div>
-                        {errors.title && <small className="ml-2 p-error">{errors.title}</small>}
+                    {errors.title && <small className="ml-2 p-error">{errors.title}</small>}
+                    
                     <div className="form-group col-12 mb-3 mt-4">
                         <FloatLabel>
                             <InputTextarea
@@ -71,9 +120,12 @@ export default function CriarNotificacao() {
                         </FloatLabel>
                         {errors.description && <small className="p-error">{errors.description}</small>}
                     </div>
+                    
                     <div className="form-group flex justify-content-end">
-                        <Button label="Adicionar Notificação" type="submit" />
+                        <Button label="Adicionar Notificação" type="submit" disabled={loading} />
                     </div>
+                    {loading && <div>Carregando...</div>}
+                    {error && <div className="p-error">{error}</div>}
                 </form>
             </div>
         </>
