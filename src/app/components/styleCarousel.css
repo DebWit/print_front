@@ -1,0 +1,10 @@
+
+.Img_Carousel{
+    aspect-ratio: 17 / 11;
+}
+
+@media (min-width: 768px) {
+.Img_Carousel{
+    aspect-ratio: 29/9; 
+    }
+}
