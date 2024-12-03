@@ -3,6 +3,7 @@
 import React, { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "primereact/button";
+import axios from "axios";
 import { getMsalInstance } from "../../msalInstance";
 import { loginRequest } from "../../msalConfig";
 import "./style.css";
@@ -18,6 +19,28 @@ export default function Login() {
 
                 if (accounts.length > 0) {
                     console.log("Usuário já autenticado:", accounts[0]);
+
+                    const userData = {
+                        member_id: accounts[0].localAccountId,
+                        name: accounts[0].name,
+                        email: accounts[0].username,
+                        activities: []
+                    };
+
+                    try {
+                        const checkResponse = await axios.post(
+                            'https://fkohtz7d4a.execute-api.sa-east-1.amazonaws.com/prod/get-member',
+                            { member_id: userData.member_id }
+                        );
+                    } catch (error: any) {
+                        if (error.response && error.response.status === 400) {
+                            await axios.post("https://fkohtz7d4a.execute-api.sa-east-1.amazonaws.com/prod/create-member", userData);
+                            console.log("Usuário criado com sucesso.");
+                        } else {
+                            console.error(error);
+                        }
+                    }
+
                     router.push("/home");
                 }
             } catch (error) {
