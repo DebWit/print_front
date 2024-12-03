@@ -15,7 +15,7 @@ export default function Mapa() {
                     Praça Mauá, 1 - Mauá, São Caetano do Sul - SP, 09580-900
                 </p>
 
-                <div className="map-container w-full grid justify-content-center">
+                <div className="map-container w-full">
                     <iframe
                         className=" block md:col-8 w-full"
                         src="https://www.google.com/maps/d/embed?mid=1zetzYfg_D5u-zJQ50mZEed-GOz2noMQ&ehbc=2E312F&noprof=1"
