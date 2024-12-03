@@ -1,12 +1,13 @@
 "use client";
 import React, { useState, useEffect } from 'react';
 import { Carousel } from 'primereact/carousel';
-
+import "./styleCarousel.css";
 
 function brute_images() {
     const brute_images = [
-        { src: "./login-background.png", alt: "teste", link: "https://www.google.com" },
-        { src: "./background-splash.png", alt: "teste", link: "https://www.youtube.com"},
+        { src: "./banner-maua-transporte.jpg", alt: "teste", link: "https://maua.br/graduacao/eventos/transporte-circular"},
+        { src: "./banner-maua.jpg", alt: "teste", link: "https://maua.br/vestibular" },
+        { src: "./banner-maua-posgraduacao.jpg", alt: "teste", link: "https://maua.br/pos-graduacao" }
     ];
     return Promise.resolve(brute_images);
 }
@@ -23,7 +24,7 @@ function CarouselHome() {
         return (
             <>
                 <a href={image.link}>
-                    <img className='w-full' src={image.src} alt={image.alt} style={{ aspectRatio: 21 / 9 }} />
+                    <img className='Img_Carousel w-full' src={image.src} alt={image.alt} />
                 </a>
             </>
         );
@@ -31,7 +32,8 @@ function CarouselHome() {
 
     return (
         <>
-            <Carousel value={images} numVisible={1} autoplayInterval={5000} numScroll={1} showIndicators={false} showNavigators={false} className="custom-carousel md:col-8 p-0" circular itemTemplate={imageCarouselTemplate} />
+            <Carousel value={images} numVisible={1} autoplayInterval={5000} numScroll={1} showIndicators={false} showNavigators={false} className="custom-carousel md:col-12 p-0" circular itemTemplate={imageCarouselTemplate}
+            />
         </>
     )
 }
