@@ -9,7 +9,10 @@ import { Button } from "primereact/button";
 import axios from "axios"; // Adicionando o axios
 
 import "./style.css";
-let hook: React.Dispatch<React.SetStateAction<number>>;
+
+import { setActualDayHook } from "../hooks/setActualdayHook";
+
+
 
 export default function Evento() {
     const [search, setSearch] = useState('');
@@ -18,8 +21,7 @@ export default function Evento() {
     const [events, setEvents] = useState<{ title: string; start_date: string; end_date: string; location: string; anchor: string; }[]>([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
-
-    hook = setActualDay as React.Dispatch<React.SetStateAction<number>>;
+    setActualDayHook(setActualDay);
 
     const dayOfWeek = (date: Date) => {
         let data = new Date();
@@ -78,7 +80,7 @@ export default function Evento() {
                 </div>
             </div>
             <div className="w-full flex justify-content-center">
-                <DayButton />
+                <DayButton setActualDay={setActualDay} />
             </div>
             <div className="w-full flex justify-content-center mt-3">
                 <div className="grid md:col-10 col-12 md:gap-3 gap-1 justify-content-center">
@@ -105,5 +107,3 @@ export default function Evento() {
         </>
     );
 }
-
-export { hook };
