@@ -19,13 +19,18 @@ const getPhoto = async () => {
             });
 
             const accessToken = tokenResponse.accessToken;
+            try {
+                const response = await axios.get('https://graph.microsoft.com/v1.0/me/photo/$value', {
+                    headers: {
+                        Authorization: `Bearer ${accessToken}`,
+                    },
+                    responseType: 'arraybuffer',
+                });
 
-            const response = await axios.get('https://graph.microsoft.com/v1.0/me/photo/$value', {
-                headers: {
-                    Authorization: `Bearer ${accessToken}`,
-                },
-                responseType: 'arraybuffer',
-            });
+            } catch (error) {
+                return undefined
+            }
+            
 
             const base64Image = btoa(
                 new Uint8Array(response.data)
@@ -36,18 +41,20 @@ const getPhoto = async () => {
         }
     } catch (error) {
         console.error('Erro ao buscar a foto:', error);
-        return '/user-sample.jpg'; // Fallback para a imagem padrão
+        return 'https://static.vecteezy.com/system/resources/thumbnails/009/292/244/small/default-avatar-icon-of-social-media-user-vector.jpg';
     }
 };
 
 
 function Navbar({ isHome = false, text = "Lorem Ipsum", anchor = "#" }: { isHome?: boolean, text?: string, anchor?: string }) {
-    const [userPhoto, setUserPhoto] = useState('/user-sample.jpg'); // Estado inicial com a imagem padrão
+    const [userPhoto, setUserPhoto] = useState('https://static.vecteezy.com/system/resources/thumbnails/009/292/244/small/default-avatar-icon-of-social-media-user-vector.jpg');
 
     useEffect(() => {
         const fetchPhoto = async () => {
             const photoUrl = await getPhoto();
-            setUserPhoto(photoUrl);
+            if (photoUrl) {
+                setUserPhoto(photoUrl);
+            }
         };
 
         fetchPhoto();
