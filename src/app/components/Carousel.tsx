@@ -3,7 +3,6 @@ import React, { useState, useEffect } from "react";
 import { Carousel } from "primereact/carousel";
 import "./styleCarousel.css";
 
-// Função para obter as imagens com base no tamanho da tela
 function getImages(isPhone: boolean) {
     const brute_images = [
         { src: "./banner-maua-transporte.jpg", alt: "teste", link: "https://maua.br/graduacao/eventos/transporte-circular" },
