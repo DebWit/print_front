@@ -43,6 +43,10 @@ export default function Evento() {
           },
         }
       );
+
+      if (Object.keys(response.data.subscribers).includes(accounts[0].localAccountId)){
+        setSubscribed(true);
+      }
       console.log(response.data)
       setEvent(response.data);
     } catch (err: any) {
@@ -54,7 +58,7 @@ export default function Evento() {
 
   const handleSubscription = async () => {
     try {
-      setIsProcessing(true); // Ativar estado de carregamento
+      setIsProcessing(true); 
 
       const msalInstance = await getMsalInstance();
       const accounts = msalInstance.getAllAccounts();
@@ -77,10 +81,18 @@ export default function Evento() {
         Authorization: `Bearer ${tokenResponse.accessToken}`,
       };
 
-      const currentActivities = event.activities || [];
+      const member = await axios.post(
+        "https://fkohtz7d4a.execute-api.sa-east-1.amazonaws.com/prod/get-member",
+        {
+          member_id: memberId,
+        },
+        { headers }
+      );
+      const currentActivities = member.data.activities;
+      console.log(currentActivities)
       const updatedActivities = subscribed
-        ? currentActivities.filter((activity) => activity !== id)
-        : [...currentActivities, id];
+      ? currentActivities.filter((activity) => activity !== event.event_id)
+      : [...currentActivities, event.event_id]
 
       await axios.post(
         "https://fkohtz7d4a.execute-api.sa-east-1.amazonaws.com/prod/update-member-activities",

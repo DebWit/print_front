@@ -25,7 +25,7 @@ const SidebarNotificacoes: React.FC<SidebarNotificacoesProps> = ({
       {notification ? (
         <>
           <h2>{notification.title}</h2>
-          <p>{new Date(notification.timestamp * 1000).toLocaleString()}</p>
+          <p>{new Date(notification.creation_date).toLocaleString()}</p>
           <p>{notification.description}</p>
         </>
       ) : (
