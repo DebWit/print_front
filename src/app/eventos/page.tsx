@@ -6,15 +6,13 @@ import DayButton, { todayDay } from "../components/DayButtonEvents";
 import EventButton from "../components/EventButton";
 import { InputText } from "primereact/inputtext";
 import { Button } from "primereact/button";
-import axios from "axios"; // Adicionando o axios
+import axios from "axios";
 
 import "./style.css";
 
 import { setActualDayHook } from "../hooks/setActualdayHook";
 
-
-
-export default function Evento() {
+export default function Eventos() {
     const [search, setSearch] = useState('');
     const [items, setItems] = useState<string[]>([]);
     const [actualDay, setActualDay] = useState(-1);

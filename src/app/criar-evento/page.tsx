@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
 import { InputTextarea } from 'primereact/inputtextarea';
@@ -7,6 +7,8 @@ import Navbar from '@/app/components/Navbar';
 import { Calendar } from 'primereact/calendar';
 import './style.css';
 import { FloatLabel } from 'primereact/floatlabel';
+import axios from 'axios';
+import { getMsalInstance } from '../../msalInstance';
 
 export default function CriarEvento() {
     const [formData, setFormData] = useState({
@@ -25,6 +27,36 @@ export default function CriarEvento() {
         end_date: '',
         rooms: '',
     });
+
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState('');
+    const [isAdmin, setIsAdmin] = useState(false);
+
+    useEffect(() => {
+        const authenticateUser = async () => {
+            try {
+                const msalInstance = await getMsalInstance();
+                const accounts = msalInstance.getAllAccounts();
+
+                if (accounts.length === 0) {
+                    throw new Error('Usuário não autenticado. Faça login novamente.');
+                }
+
+                const username = accounts[0].username.split('@')[0];
+                const isCommonUser = /^\d{2}\.\d{5}-\d$/.test(username);
+
+                if (isCommonUser) {
+                    throw new Error('Você não tem permissão para acessar esta página.');
+                }
+
+                setIsAdmin(true);
+            } catch (err) {
+                setError(err.message);
+            }
+        };
+
+        authenticateUser();
+    }, []);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
@@ -76,9 +108,49 @@ export default function CriarEvento() {
         return Object.keys(newErrors).length === 0;
     };
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+
+        if (!validateForm()) return;
+
+        setLoading(true);
+        setError('');
+
+        try {
+            const msalInstance = await getMsalInstance();
+            const accounts = msalInstance.getAllAccounts();
+
+            if (accounts.length === 0) {
+                throw new Error('Usuário não autenticado. Faça login novamente.');
+            }
+
+            const tokenResponse = await msalInstance.acquireTokenSilent({
+                scopes: ['User.Read'],
+                account: accounts[0],
+            });
+
+            const response = await axios.post(
+                'https://fkohtz7d4a.execute-api.sa-east-1.amazonaws.com/prod/create-event',
+                { ...formData },
+                {
+                    headers: {
+                        Authorization: `Bearer ${tokenResponse.accessToken}`,
+                    },
+                }
+            );
+
+            console.log('Evento criado com sucesso:', response.data);
+            alert('Evento criado com sucesso!');
+        } catch (err: any) {
+            setError(err.response ? err.response.data.message : err.message);
+        } finally {
+            setLoading(false);
+        }
     };
+
+    if (!isAdmin) {
+        return <div className="p-error text-center">Você não tem permissão para acessar esta página.</div>;
+    }
 
     return (
         <>
@@ -176,13 +248,15 @@ export default function CriarEvento() {
                             className="p-button-outlined"
                             onClick={handleAddRoom}
                             type="button"
-                            />
+                        />
                     </div>
                     {errors.rooms && <small className="p-error ">{errors.rooms}</small>}
 
                     <div className="form-group flex justify-content-end mt-4">
                         <Button label="Salvar Evento" type="submit" />
                     </div>
+                    {loading && <div>Carregando...</div>}
+                    {error && <div className="p-error">{error}</div>}
                 </form>
             </div>
         </>

@@ -10,11 +10,11 @@ export default function GerenciarEventos() {
     const [eventos, setEventos] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [isAdmin, setIsAdmin] = useState(false);  
 
     useEffect(() => {
-        const fetchEventos = async () => {
+        const authenticateUser = async () => {
             try {
-                // Obter a instância do MSAL e o token
                 const msalInstance = await getMsalInstance();
                 const accounts = msalInstance.getAllAccounts();
 
@@ -22,44 +22,58 @@ export default function GerenciarEventos() {
                     throw new Error("Usuário não autenticado. Faça login novamente.");
                 }
 
-                const tokenResponse = await msalInstance.acquireTokenSilent({
-                    scopes: ["User.Read"],
-                    account: accounts[0],
-                });
+                const username = accounts[0].username.split('@')[0];
+                const isCommonUser = /^\d{2}\.\d{5}-\d$/.test(username);
 
-                // Realizar a requisição à sua API para obter os eventos
-                const response = await axios.get(
-                    "https://fkohtz7d4a.execute-api.sa-east-1.amazonaws.com/prod/get-all-events",  // Altere para o endpoint correto da sua API
-                    {
-                        headers: {
-                            Authorization: `Bearer ${tokenResponse.accessToken}`,
-                        },
-                    }
-                );
+                if (isCommonUser) {
+                    throw new Error("Você não tem permissão para acessar esta página.");
+                }
 
-                setEventos(response.data.events);   
+                setIsAdmin(true);
+                fetchEventos(); 
             } catch (err: any) {
-                setError(err.response ? err.response.data.message : err.message);
-            } finally {
-                setLoading(false);
+                setError(err.message);
             }
         };
 
-        fetchEventos();
+        authenticateUser();
     }, []);
+
+    const fetchEventos = async () => {
+        try {
+            const msalInstance = await getMsalInstance();
+            const accounts = msalInstance.getAllAccounts();
+
+            const tokenResponse = await msalInstance.acquireTokenSilent({
+                scopes: ["User.Read"],
+                account: accounts[0],
+            });
+
+            const response = await axios.get(
+                "https://fkohtz7d4a.execute-api.sa-east-1.amazonaws.com/prod/get-all-events",  
+                {
+                    headers: {
+                        Authorization: `Bearer ${tokenResponse.accessToken}`,
+                    },
+                }
+            );
+
+            setEventos(response.data.events);
+        } catch (err: any) {
+            setError(err.response ? err.response.data.message : err.message);
+        } finally {
+            setLoading(false);
+        }
+    };
 
     const filteredEventos = eventos.filter(evento =>
         evento.name.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
-    const deleteEvent = async (event_id) => {
+    const deleteEvent = async (event_id: string) => {
         try {
             const msalInstance = await getMsalInstance();
             const accounts = msalInstance.getAllAccounts();
-
-            if (accounts.length === 0) {
-                throw new Error("Usuário não autenticado. Faça login novamente.");
-            }
 
             const tokenResponse = await msalInstance.acquireTokenSilent({
                 scopes: ["User.Read"],
@@ -81,6 +95,10 @@ export default function GerenciarEventos() {
             setError(err.response ? err.response.data.message : err.message);
         }
     };
+
+    if (!isAdmin) {
+        return <div className="p-error text-center">Você não tem permissão para acessar esta página.</div>;
+    }
 
     return (
         <div>

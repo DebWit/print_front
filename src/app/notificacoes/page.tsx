@@ -44,7 +44,7 @@ export default function Notificacoes() {
                         },
                     }
                 );
-
+                console.log(response.data.notifications)
                 setNotificacoes(response.data.notifications);
             } catch (err: any) {
                 setError(err.response ? err.response.data.message : err.message);

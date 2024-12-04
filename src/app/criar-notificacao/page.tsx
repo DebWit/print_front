@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
 import { InputTextarea } from 'primereact/inputtextarea';
@@ -24,6 +24,33 @@ export default function CriarNotificacao() {
 
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
+    const [isAdmin, setIsAdmin] = useState(false);
+
+    useEffect(() => {
+        const authenticateUser = async () => {
+            try {
+                const msalInstance = await getMsalInstance();
+                const accounts = msalInstance.getAllAccounts();
+
+                if (accounts.length === 0) {
+                    throw new Error('Usuário não autenticado. Faça login novamente.');
+                }
+
+                const username = accounts[0].username.split('@')[0];
+                const isCommonUser = /^\d{2}\.\d{5}-\d$/.test(username);
+
+                if (isCommonUser) {
+                    throw new Error('Você não tem permissão para acessar esta página.');
+                }
+
+                setIsAdmin(true);
+            } catch (err) {
+                setError(err.message);
+            }
+        };
+
+        authenticateUser();
+    }, []);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
@@ -43,33 +70,33 @@ export default function CriarNotificacao() {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-    
+
         if (!validateForm()) return;
-    
+
         setLoading(true);
         setError('');
-    
+
         try {
             const msalInstance = await getMsalInstance();
             const accounts = msalInstance.getAllAccounts();
-    
+
             if (accounts.length === 0) {
-                throw new Error("Usuário não autenticado. Faça login novamente.");
+                throw new Error('Usuário não autenticado. Faça login novamente.');
             }
-    
+
             const tokenResponse = await msalInstance.acquireTokenSilent({
-                scopes: ["User.Read"],
+                scopes: ['User.Read'],
                 account: accounts[0],
             });
-    
+
             const notificationData = {
                 ...formData,
-                creation_date: Date.now(), 
-                has_seen: []               
+                creation_date: Date.now(),
+                has_seen: [],
             };
-    
+
             const response = await axios.post(
-                'https://fkohtz7d4a.execute-api.sa-east-1.amazonaws.com/prod/create-notification', 
+                'https://fkohtz7d4a.execute-api.sa-east-1.amazonaws.com/prod/create-notification',
                 notificationData,
                 {
                     headers: {
@@ -77,7 +104,7 @@ export default function CriarNotificacao() {
                     },
                 }
             );
-    
+
             console.log('Notificação criada com sucesso:', response.data);
             alert('Notificação criada com sucesso!');
         } catch (err: any) {
@@ -86,7 +113,10 @@ export default function CriarNotificacao() {
             setLoading(false);
         }
     };
-    
+
+    if (!isAdmin) {
+        return <div className="p-error text-center">Você não tem permissão para acessar esta página.</div>;
+    }
 
     return (
         <>
@@ -104,7 +134,7 @@ export default function CriarNotificacao() {
                         />
                     </div>
                     {errors.title && <small className="ml-2 p-error">{errors.title}</small>}
-                    
+
                     <div className="form-group col-12 mb-3 mt-4">
                         <FloatLabel>
                             <InputTextarea
@@ -120,7 +150,7 @@ export default function CriarNotificacao() {
                         </FloatLabel>
                         {errors.description && <small className="p-error">{errors.description}</small>}
                     </div>
-                    
+
                     <div className="form-group flex justify-content-end">
                         <Button label="Adicionar Notificação" type="submit" disabled={loading} />
                     </div>

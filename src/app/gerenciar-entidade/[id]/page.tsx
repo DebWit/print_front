@@ -22,6 +22,33 @@ export default function GerenciarEntidade() {
     const [loading, setLoading] = useState(true);
     const [errors, setErrors] = useState<any>({});
     const [error, setError] = useState("");
+    const [isAdmin, setIsAdmin] = useState(false);
+
+    useEffect(() => {
+        const authenticateUser = async () => {
+            try {
+                const msalInstance = await getMsalInstance();
+                const accounts = msalInstance.getAllAccounts();
+
+                if (accounts.length === 0) {
+                    throw new Error("Usuário não autenticado. Faça login novamente.");
+                }
+
+                const username = accounts[0].username.split('@')[0];
+                const isCommonUser = /^\d{2}\.\d{5}-\d$/.test(username);
+
+                if (isCommonUser) {
+                    throw new Error("Você não tem permissão para acessar esta página.");
+                }
+
+                setIsAdmin(true); 
+            } catch (err) {
+                setError(err.message);
+            }
+        };
+
+        authenticateUser();
+    }, []);
 
     useEffect(() => {
         const fetchStudentOrganization = async () => {
@@ -48,7 +75,6 @@ export default function GerenciarEntidade() {
                     }
                 );
 
-                console.log("Dados da entidade:", response.data);
                 setData(response.data);
             } catch (err: any) {
                 setError(err.response ? err.response.data.message : err.message);
@@ -57,8 +83,10 @@ export default function GerenciarEntidade() {
             }
         };
 
-        fetchStudentOrganization();
-    }, [id]);
+        if (isAdmin) {
+            fetchStudentOrganization(); 
+        }
+    }, [isAdmin, id]);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
@@ -123,6 +151,10 @@ export default function GerenciarEntidade() {
             setError(err.response ? err.response.data.message : err.message);
         }
     };
+
+    if (!isAdmin) {
+        return <div className="p-error text-center">Você não tem permissão para acessar esta página.</div>;
+    }
 
     if (loading) {
         return <div>Carregando...</div>;

@@ -10,6 +10,33 @@ export default function GerenciarCursos() {
     const [cursos, setCursos] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [isAdmin, setIsAdmin] = useState(false); 
+
+    useEffect(() => {
+        const authenticateUser = async () => {
+            try {
+                const msalInstance = await getMsalInstance();
+                const accounts = msalInstance.getAllAccounts();
+
+                if (accounts.length === 0) {
+                    throw new Error("Usuário não autenticado. Faça login novamente.");
+                }
+
+                const username = accounts[0].username.split('@')[0];
+                const isCommonUser = /^\d{2}\.\d{5}-\d$/.test(username);
+
+                if (isCommonUser) {
+                    throw new Error("Você não tem permissão para acessar esta página.");
+                }
+
+                setIsAdmin(true);
+            } catch (err) {
+                setError(err.message);
+            }
+        };
+
+        authenticateUser();
+    }, []);
 
     useEffect(() => {
         const fetchCursos = async () => {
@@ -43,8 +70,10 @@ export default function GerenciarCursos() {
             }
         };
 
-        fetchCursos();
-    }, []);
+        if (isAdmin) {
+            fetchCursos();
+        }
+    }, [isAdmin]);
 
     const filteredCursos = cursos.filter(curso =>
         curso.name.toLowerCase().includes(searchTerm.toLowerCase())
@@ -64,9 +93,9 @@ export default function GerenciarCursos() {
                 account: accounts[0],
             });
 
-            const response = await axios.post(
+            await axios.post(
                 `https://fkohtz7d4a.execute-api.sa-east-1.amazonaws.com/prod/delete-course`,
-                {"course_id": course_id},
+                { "course_id": course_id },
                 {
                     headers: {
                         Authorization: `Bearer ${tokenResponse.accessToken}`,
@@ -79,6 +108,10 @@ export default function GerenciarCursos() {
             setError(err.response ? err.response.data.message : err.message);
         }
     };
+
+    if (!isAdmin) {
+        return <div className="p-error text-center">Você não tem permissão para acessar esta página.</div>;
+    }
 
     return (
         <div>

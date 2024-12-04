@@ -10,6 +10,33 @@ export default function GerenciarEntidades() {
     const [studentOrganizations, setStudentOrganizations] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [isAdmin, setIsAdmin] = useState(false);
+
+    useEffect(() => {
+        const authenticateUser = async () => {
+            try {
+                const msalInstance = await getMsalInstance();
+                const accounts = msalInstance.getAllAccounts();
+
+                if (accounts.length === 0) {
+                    throw new Error("Usuário não autenticado. Faça login novamente.");
+                }
+
+                const username = accounts[0].username.split('@')[0];
+                const isCommonUser = /^\d{2}\.\d{5}-\d$/.test(username);
+
+                if (isCommonUser) {
+                    throw new Error("Você não tem permissão para acessar esta página.");
+                }
+
+                setIsAdmin(true);
+            } catch (err) {
+                setError(err.message);
+            }
+        };
+
+        authenticateUser();
+    }, []);
 
     useEffect(() => {
         const fetchStudentOrganizations = async () => {
@@ -18,7 +45,7 @@ export default function GerenciarEntidades() {
                 const accounts = msalInstance.getAllAccounts();
 
                 if (accounts.length === 0) {
-                    throw new Error("User not authenticated. Please log in again.");
+                    throw new Error("Usuário não autenticado. Faça login novamente.");
                 }
 
                 const tokenResponse = await msalInstance.acquireTokenSilent({
@@ -35,7 +62,7 @@ export default function GerenciarEntidades() {
                     }
                 );
 
-                setStudentOrganizations(response.data.student_organizations);
+                setStudentOrganizations(response.data.student_organizations); 
             } catch (err: any) {
                 setError(err.response ? err.response.data.message : err.message);
             } finally {
@@ -43,8 +70,10 @@ export default function GerenciarEntidades() {
             }
         };
 
-        fetchStudentOrganizations();
-    }, []);
+        if (isAdmin) {
+            fetchStudentOrganizations();
+        }
+    }, [isAdmin]);
 
     const filteredStudentOrganizations = studentOrganizations.filter(org =>
         org.name.toLowerCase().includes(searchTerm.toLowerCase())
@@ -56,7 +85,7 @@ export default function GerenciarEntidades() {
             const accounts = msalInstance.getAllAccounts();
 
             if (accounts.length === 0) {
-                throw new Error("User not authenticated. Please log in again.");
+                throw new Error("Usuário não autenticado. Faça login novamente.");
             }
 
             const tokenResponse = await msalInstance.acquireTokenSilent({
@@ -66,7 +95,7 @@ export default function GerenciarEntidades() {
 
             await axios.post(
                 `https://fkohtz7d4a.execute-api.sa-east-1.amazonaws.com/prod/delete-student-organization`,
-                { stu_org_id },
+                { "stu_org_id": stu_org_id },
                 {
                     headers: {
                         Authorization: `Bearer ${tokenResponse.accessToken}`,
@@ -74,13 +103,15 @@ export default function GerenciarEntidades() {
                 }
             );
 
-            setStudentOrganizations(
-                studentOrganizations.filter(org => org.stu_org_id !== stu_org_id)
-            );
+            setStudentOrganizations(studentOrganizations.filter(org => org.stu_org_id !== stu_org_id));
         } catch (err: any) {
             setError(err.response ? err.response.data.message : err.message);
         }
     };
+
+    if (!isAdmin) {
+        return <div className="p-error text-center">Você não tem permissão para acessar esta página.</div>;
+    }
 
     return (
         <div>
@@ -91,27 +122,24 @@ export default function GerenciarEntidades() {
                     className="p-inputtext p-component" 
                     value={searchTerm} 
                     onChange={(e) => setSearchTerm(e.target.value)} 
-                    placeholder="Procure entidade..." 
+                    placeholder="Pesquisar entidade..." 
                 />
                 <i className="pi pi-search p-3 search-icon"></i>
             </div>
             <div className="grid flex justify-content-center mt-2 mx-0">
-                {loading && <p>Carregando Entidades Estudantis...</p>}
-                {error && <p>Error Carregando Entidades Estudantis: {error}</p>}
+                {loading && <p>Carregando Entidades...</p>}
+                {error && <p>Erro ao carregar entidades: {error}</p>}
                 {!loading && !error && filteredStudentOrganizations.map((org) => (
                     <div key={org.stu_org_id} className="col-11 lg:col-8">
                         <div className="p-card">
                             <div className="p-card-body">
                                 <h4>{org.name}</h4>
                                 <p>{org.description}</p>
-                                <a 
-                                    className="ml-1 p-button p-button-warning" 
-                                    href={`/gerenciar-entidade/${org.stu_org_id}`}
-                                >
+                                <a className="mr-1 p-button p-button-warning" href={`/gerenciar-entidade/${org.stu_org_id}`}>
                                     <i className="pi pi-pencil"></i>
                                 </a>
                                 <button 
-                                    className="ml-2 p-button p-button-danger"
+                                    className="p-button p-component p-button-danger" 
                                     onClick={() => deleteStudentOrganization(org.stu_org_id)}
                                 >
                                     <i className="pi pi-minus"></i>
@@ -122,7 +150,7 @@ export default function GerenciarEntidades() {
                 ))}
                 <div className="mt-4 lg:col-8 col-12">
                     <a 
-                        href="/create-student-organization" 
+                        href="/criar-entidade" 
                         className="p-button p-component add mr-2"
                     >
                         +

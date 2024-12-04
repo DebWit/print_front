@@ -71,7 +71,6 @@ export default function Evento() {
   
       console.log("Access Token:", tokenResponse.accessToken);
   
-      // Configuração inicial para as requisições
       const headers = {
         Authorization: `Bearer ${tokenResponse.accessToken}`,
       };
@@ -82,7 +81,7 @@ export default function Evento() {
         : [...currentActivities, id];
   
       await axios.post(
-        "https://fkohtz7d4a.execute-api.sa-east-1.amazonaws.com/prod/update_member_activities",
+        "https://fkohtz7d4a.execute-api.sa-east-1.amazonaws.com/prod/update-member-activities",
         {
           member_id: memberId,
           event_id: id,
@@ -91,7 +90,6 @@ export default function Evento() {
         { headers }
       );
   
-      // Inscrever ou desinscrever no evento
       const route = subscribed ? "unsubscribe-event" : "subscribe-event";
       await axios.post(
         `https://fkohtz7d4a.execute-api.sa-east-1.amazonaws.com/prod/${route}`,

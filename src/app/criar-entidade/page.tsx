@@ -28,7 +28,33 @@ export default function CriarEntidade() {
 
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
+    const [isAdmin, setIsAdmin] = useState(false);
 
+    useEffect(() => {
+        const authenticateUser = async () => {
+            try {
+                const msalInstance = await getMsalInstance();
+                const accounts = msalInstance.getAllAccounts();
+
+                if (accounts.length === 0) {
+                    throw new Error('Usuário não autenticado. Faça login novamente.');
+                }
+
+                const username = accounts[0].username.split('@')[0];
+                const isCommonUser = /^\d{2}\.\d{5}-\d$/.test(username);
+
+                if (isCommonUser) {
+                    throw new Error('Você não tem permissão para acessar esta página.');
+                }
+
+                setIsAdmin(true);
+            } catch (err) {
+                setError(err.message);
+            }
+        };
+
+        authenticateUser();
+    }, []);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
@@ -70,11 +96,11 @@ export default function CriarEntidade() {
             const accounts = msalInstance.getAllAccounts();
 
             if (accounts.length === 0) {
-                throw new Error("Usuário não autenticado. Faça login novamente.");
+                throw new Error('Usuário não autenticado. Faça login novamente.');
             }
 
             const tokenResponse = await msalInstance.acquireTokenSilent({
-                scopes: ["User.Read"],
+                scopes: ['User.Read'],
                 account: accounts[0],
             });
 
@@ -96,6 +122,10 @@ export default function CriarEntidade() {
             setLoading(false);
         }
     };
+
+    if (!isAdmin) {
+        return <div className="p-error text-center">Você não tem permissão para acessar esta página.</div>;
+    }
 
     return (
         <>
@@ -129,7 +159,7 @@ export default function CriarEntidade() {
                                 onChange={handleChange}
                                 className="w-full"
                                 rows={5}
-                                placeholder="Digite uma descrição do curso"
+                                placeholder="Digite uma descrição da entidade"
                             />
                             <label htmlFor="description">Descrição</label>
                         </FloatLabel>
