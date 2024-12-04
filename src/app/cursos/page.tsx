@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import axios from "axios";
 import { getMsalInstance } from "../../msalInstance";
 import Navbar from "../components/Navbar";
@@ -10,44 +10,44 @@ import "./style.css";
 export default function Cursos() {
     const [dados, setDados] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
+    const [error, setError] = useState<string | null>(null);
 
-    useEffect(() => {
-        const fetchCourses = async () => {
-            try {
-                const msalInstance = await getMsalInstance();
-                const accounts = msalInstance.getAllAccounts();
+    const fetchCourses = async () => {
+        try {
+            const msalInstance = await getMsalInstance();
+            const accounts = msalInstance.getAllAccounts();
 
-                if (accounts.length === 0) {
-                    throw new Error("Usuário não autenticado. Faça login novamente.");
-                }
-
-                const tokenResponse = await msalInstance.acquireTokenSilent({
-                    scopes: ["User.Read"],
-                    account: accounts[0],
-                });
-
-                console.log("Access Token:", tokenResponse.accessToken);
-
-                const response = await axios.get(
-                    "https://fkohtz7d4a.execute-api.sa-east-1.amazonaws.com/prod/get-all-courses",
-                    {
-                        headers: {
-                            Authorization: `Bearer ${tokenResponse.accessToken}`,
-                        },
-                    }
-                );
-
-                setDados(response.data);
-            } catch (err: any) {
-                setError(err.response ? err.response.data.message : err.message);
-            } finally {
-                setLoading(false);
+            if (accounts.length === 0) {
+                throw new Error("Usuário não autenticado. Faça login novamente.");
             }
-        };
 
+            const tokenResponse = await msalInstance.acquireTokenSilent({
+                scopes: ["User.Read"],
+                account: accounts[0],
+            });
+
+            console.log("Access Token:", tokenResponse.accessToken);
+
+            const response = await axios.get(
+                "https://fkohtz7d4a.execute-api.sa-east-1.amazonaws.com/prod/get-all-courses",
+                {
+                    headers: {
+                        Authorization: `Bearer ${tokenResponse.accessToken}`,
+                    },
+                }
+            );
+
+            setDados(response.data);
+        } catch (err: any) {
+            setError(err.response ? err.response.data.message : err.message);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    if (loading) {
         fetchCourses();
-    }, []);
+    }
 
     return (
         <>
