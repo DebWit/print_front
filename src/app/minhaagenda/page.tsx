@@ -27,7 +27,7 @@ export default function MinhaAgenda() {
         if (dia <= 1 || dia >= 6) {
             return 0;
         }
-        return dia-1;
+        return dia-2;
     };
 
     useEffect(() => {
@@ -81,7 +81,7 @@ export default function MinhaAgenda() {
         };
         fetchEvents();
         if(actualDay === -1){
-            setTimeout(() => {setActualDay(todayDay)},500)
+            setTimeout(() => {setActualDay(todayDay)},1000)
         }
     }, [actualDay, allEvents]);
 
