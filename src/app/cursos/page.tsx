@@ -6,6 +6,7 @@ import { getMsalInstance } from "../../msalInstance";
 import Navbar from "../components/Navbar";
 import CardPadrao from "../components/CardCursos";
 import "./style.css";
+import BottomBar from "../components/BottomBar";
 
 export default function Cursos() {
     const [dados, setDados] = useState([]);
@@ -59,6 +60,7 @@ export default function Cursos() {
                     </div>
                 ))}
             </div>
+            <BottomBar />
         </>
     );
 }

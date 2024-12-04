@@ -59,7 +59,12 @@ export default function Homepage() {
   }, []);
 
   if (loading) {
-    return <div>Carregando...</div>;
+    return (
+    <>
+      <div>Carregando...</div>
+      <BottomBar />
+    </>
+    );
   }
 
   if (error) {

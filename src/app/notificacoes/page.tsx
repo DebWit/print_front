@@ -5,6 +5,7 @@ import { getMsalInstance } from "../../msalInstance";
 import Navbar from "../components/Navbar";
 import SidebarNotificacoes from "../components/SideBar";
 import "./style.css";
+import BottomBar from "../components/BottomBar";
 
 interface Notification {
     notification_id: string;
@@ -162,6 +163,7 @@ export default function Notificacoes() {
                 onHide={() => setSidebarVisible(false)}
                 notification={selectedNotification}
             />
+            <BottomBar />
         </>
     );
 }
