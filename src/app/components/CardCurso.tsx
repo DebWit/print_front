@@ -1,7 +1,7 @@
 import React from 'react'; 
 import { Card } from 'primereact/card';
 
-export default function CardCurso({title, photo, style}: {title: string, photo: string, style: Object}) {
+export default function CardCurso({title, photo, style}: {title: string, photo: string, style: any}) {
     return (
         <div className="card">
             <Card style={style.card}>
