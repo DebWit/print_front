@@ -18,7 +18,7 @@ type EventData = {
     description: string;
     start_date: Date;
     end_date: Date;
-    rooms: Record<string, number>;
+    rooms: Record<string, any>;
 };
 
 export default function GerenciarEvento() {
@@ -63,8 +63,8 @@ export default function GerenciarEvento() {
                 }
 
                 setIsAdmin(true);
-                fetchEventData(); // Fetch event data after user is authenticated
-            } catch (err) {
+                fetchEventData();
+            } catch (err: any) {
                 setError(err.message);
             }
         };
@@ -83,7 +83,7 @@ export default function GerenciarEvento() {
             });
 
             const response = await axios.post(
-                `https://fkohtz7d4a.execute-api.sa-east-1.amazonaws.com/prod/get-event`, // Replace with your actual API URL
+                `https://fkohtz7d4a.execute-api.sa-east-1.amazonaws.com/prod/get-event`,
                 { event_id: id },
                 {
                     headers: {
@@ -102,7 +102,7 @@ export default function GerenciarEvento() {
         }
     };
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const handleChange = (e: any) => {
         const { name, value } = e.target;
         setData((prev) => ({
             ...prev,
@@ -185,11 +185,11 @@ export default function GerenciarEvento() {
 
                 const updatedData = {
                     ...data,
-                    rooms: data.rooms, // Ensure rooms are included
+                    rooms: data.rooms,
                 };
 
                 const response = await axios.post(
-                    `https://fkohtz7d4a.execute-api.sa-east-1.amazonaws.com/prod/update-event`, // Replace with your actual API URL
+                    `https://fkohtz7d4a.execute-api.sa-east-1.amazonaws.com/prod/update-event`,
                     updatedData,
                     {
                         headers: {

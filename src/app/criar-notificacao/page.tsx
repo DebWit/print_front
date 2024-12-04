@@ -44,7 +44,7 @@ export default function CriarNotificacao() {
                 }
 
                 setIsAdmin(true);
-            } catch (err) {
+            } catch (err:any) {
                 setError(err.message);
             }
         };

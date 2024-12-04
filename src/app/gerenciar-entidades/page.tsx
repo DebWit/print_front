@@ -30,7 +30,7 @@ export default function GerenciarEntidades() {
                 }
 
                 setIsAdmin(true);
-            } catch (err) {
+            } catch (err: any) {
                 setError(err.message);
             }
         };
@@ -75,11 +75,11 @@ export default function GerenciarEntidades() {
         }
     }, [isAdmin]);
 
-    const filteredStudentOrganizations = studentOrganizations.filter(org =>
+    const filteredStudentOrganizations = studentOrganizations.filter((org: {name: string}) =>
         org.name.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
-    const deleteStudentOrganization = async (stu_org_id) => {
+    const deleteStudentOrganization = async (stu_org_id: any) => {
         try {
             const msalInstance = await getMsalInstance();
             const accounts = msalInstance.getAllAccounts();
@@ -103,7 +103,7 @@ export default function GerenciarEntidades() {
                 }
             );
 
-            setStudentOrganizations(studentOrganizations.filter(org => org.stu_org_id !== stu_org_id));
+            setStudentOrganizations(studentOrganizations.filter((org: {stu_org_id: string}) => org.stu_org_id !== stu_org_id));
         } catch (err: any) {
             setError(err.response ? err.response.data.message : err.message);
         }
@@ -129,7 +129,7 @@ export default function GerenciarEntidades() {
             <div className="grid flex justify-content-center mt-2 mx-0">
                 {loading && <p>Carregando Entidades...</p>}
                 {error && <p>Erro ao carregar entidades: {error}</p>}
-                {!loading && !error && filteredStudentOrganizations.map((org) => (
+                {!loading && !error && filteredStudentOrganizations.map((org: any) => (
                     <div key={org.stu_org_id} className="col-11 lg:col-8">
                         <div className="p-card">
                             <div className="p-card-body">

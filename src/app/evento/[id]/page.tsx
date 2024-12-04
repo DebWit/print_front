@@ -14,7 +14,7 @@ export default function Evento() {
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [event, setEvent] = useState(null);
+  const [event, setEvent]:any = useState(null);
   const [isExpanded, setIsExpanded] = useState(false);
   const [subscribed, setSubscribed] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
@@ -47,7 +47,6 @@ export default function Evento() {
       if (Object.keys(response.data.subscribers).includes(accounts[0].localAccountId)){
         setSubscribed(true);
       }
-      console.log(response.data)
       setEvent(response.data);
     } catch (err: any) {
       setError(err.response ? err.response.data.message : err.message);
@@ -91,7 +90,7 @@ export default function Evento() {
       const currentActivities = member.data.activities;
       console.log(currentActivities)
       const updatedActivities = subscribed
-      ? currentActivities.filter((activity) => activity !== event.event_id)
+      ? currentActivities.filter((activity:any) => activity !== event.event_id)
       : [...currentActivities, event.event_id]
 
       await axios.post(

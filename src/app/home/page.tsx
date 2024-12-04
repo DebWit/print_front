@@ -48,7 +48,7 @@ export default function Homepage() {
         const username = accounts[0].username.split("@")[0];
         const isCommonUser = /^\d{2}\.\d{5}-\d$/.test(username);
         setIsAdmin(!isCommonUser);
-      } catch (err) {
+      } catch (err: any) {
         setError(err.message);
       } finally {
         setLoading(false);

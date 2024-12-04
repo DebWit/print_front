@@ -42,7 +42,7 @@ export default function GerenciarEntidade() {
                 }
 
                 setIsAdmin(true); 
-            } catch (err) {
+            } catch (err: any) {
                 setError(err.message);
             }
         };

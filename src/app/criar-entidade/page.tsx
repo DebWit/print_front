@@ -48,7 +48,7 @@ export default function CriarEntidade() {
                 }
 
                 setIsAdmin(true);
-            } catch (err) {
+            } catch (err: any) {
                 setError(err.message);
             }
         };

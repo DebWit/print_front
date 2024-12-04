@@ -66,7 +66,7 @@ export default function GerenciarEventos() {
         }
     };
 
-    const filteredEventos = eventos.filter(evento =>
+    const filteredEventos = eventos.filter((evento: {name: any}) =>
         evento.name.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
@@ -90,7 +90,7 @@ export default function GerenciarEventos() {
                 }
             );
 
-            setEventos(eventos.filter(evento => evento.event_id !== event_id));
+            setEventos(eventos.filter((evento: {event_id: any}) => evento.event_id !== event_id));
         } catch (err: any) {
             setError(err.response ? err.response.data.message : err.message);
         }
@@ -116,7 +116,7 @@ export default function GerenciarEventos() {
             <div className="grid flex justify-content-center mt-2 mx-0">
                 {loading && <p>Carregando eventos...</p>}
                 {error && <p>Erro ao carregar eventos: {error}</p>}
-                {!loading && !error && filteredEventos.map((evento) => (
+                {!loading && !error && filteredEventos.map((evento: any) => (
                     <div key={evento.event_id} className="col-11 lg:col-8">
                         <div className="p-card">
                             <div className="p-card-body">
