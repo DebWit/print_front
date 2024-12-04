@@ -43,7 +43,8 @@ export default function Evento() {
           },
         }
       );
-      if (id in Object.keys(response.data.subscribers)){
+
+      if (Object.keys(response.data.subscribers).includes(accounts[0].localAccountId)){
         setSubscribed(true);
       }
       console.log(response.data)
@@ -82,8 +83,8 @@ export default function Evento() {
 
       const currentActivities = event.activities || [];
       const updatedActivities = subscribed
-        ? currentActivities.filter((activity) => activity !== id)
-        : [...currentActivities, id];
+      ? [...currentActivities, id]
+      : currentActivities.filter((activity) => activity !== id)
 
       await axios.post(
         "https://fkohtz7d4a.execute-api.sa-east-1.amazonaws.com/prod/update-member-activities",

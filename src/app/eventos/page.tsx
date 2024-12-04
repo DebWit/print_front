@@ -12,7 +12,9 @@ import "./style.css";
 
 import { setActualDayHook } from "../hooks/setActualdayHook";
 
-export default function Eventos() {
+
+
+export default function Evento() {
     const [search, setSearch] = useState('');
     const [items, setItems] = useState<string[]>([]);
     const [actualDay, setActualDay] = useState(-1);

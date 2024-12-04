@@ -1,99 +1,122 @@
 "use client"
 import Navbar from "../components/Navbar";
-import DayButton, { todayDay } from "../components/DayButtonMyCalendar";
+import DayButton, { todayDay } from "../components/DayButtonEvents";
 import EventButton from "../components/EventButton";
 import BottomBar from "../components/BottomBar";
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
+import { setActualDayHook } from "../hooks/setActualdayHook";
+import axios from "axios";
 
 import "./style.css";
+import { getMsalInstance } from "@/msalInstance";
 
-let hook: React.Dispatch<React.SetStateAction<number>>;
 export default function MinhaAgenda() {
-    const days: Array<string> = ["SEG", "TER", "QUA", "QUI", "SEX"];
-    const [search, setSearch] = useState('');
+    const [accounts, setAccounts] = useState<any[]>([]);
+    const [memberId, setMemberId] = useState('')
     const [items, setItems] = useState<string[]>([]);
     const [actualDay, setActualDay] = useState(-1);
-    const [events, setEvents] = useState<{ title: string; startTime: string; endTime: string; location: string; anchor: string; }[]>([]);
-    hook = setActualDay as React.Dispatch<React.SetStateAction<number>>;
+    const [events, setEvents] = useState([]);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState('');
+    setActualDayHook(setActualDay);
+
+    const dayOfWeek = (date: Date) => {
+        let data = new Date();
+        let dia = data.getDay();
+        if (dia <= 1 || dia >= 6) {
+            return 0;
+        }
+        return dia
+    };
+
+    let allEvents = []
+
     useEffect(() => {
-        if (actualDay === -1) {
-            setActualDay(todayDay);
-        }
-        if (actualDay >= 0 && actualDay < days.length) {
-            setEvents(eventos[days[actualDay]]);
-        }
+        const initializeMsal = async () => {
+            try {
+                const msalInstance = await getMsalInstance();
+                const msalAccounts = msalInstance.getAllAccounts();
+
+                if (msalAccounts.length === 0) {
+                    throw new Error("Usuário não autenticado. Faça login novamente.");
+                }
+                setMemberId(msalAccounts[0].localAccountId)
+
+                const memberResponse = await axios.post('https://fkohtz7d4a.execute-api.sa-east-1.amazonaws.com/prod/get-member', { "member_id": msalAccounts[0].localAccountId })
+
+                console.log(memberResponse.data)
+                let memberEvents: any[] = []
+
+                memberResponse.data.activities.forEach(async e => {
+                    const eventResponse = await axios.post('https://fkohtz7d4a.execute-api.sa-east-1.amazonaws.com/prod/get-event', { "event_id": e })
+                    console.log(eventResponse)
+                    memberEvents.push(eventResponse.data);
+                });
+
+                allEvents = memberEvents
+                console.log
+
+                const tokenResponse = await msalInstance.acquireTokenSilent({
+                    scopes: ["User.Read"],
+                    account: msalAccounts[0],
+                });
+
+            } catch (err: any) {
+                setError(err.response ? err.response.data.message : err.message);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        initializeMsal();
+    }, []);
+
+    useEffect(() => {
+        const fetchEvents = async () => {
+            try{
+                setLoading(true);
+                const filteredEvents = allEvents.filter(
+                    (event: any) => dayOfWeek(new Date(event.start_date)) === actualDay
+                );
+                setEvents(filteredEvents);
+
+            }finally{
+                setLoading(false);
+            }
+        };
+        fetchEvents();
+
     }, [actualDay]);
 
-    const eventos: { [key: string]: { title: string; startTime: string; endTime: string; location: string; anchor: string; }[] } = {
-        "SEG": [{
-            "title": "Seg",
-            "startTime": "7:40",
-            "endTime": "8:40",
-            "location": "CEAF",
-            "anchor": "/evento/550e8400-e29b-41d4-a716-446655440000"
-        },],
-        "TER": [{
-            "title": "Ter",
-            "startTime": "7:40",
-            "endTime": "8:40",
-            "location": "CEAF",
-            "anchor": "/evento/550e8400-e29b-41d4-a716-446655440000"
-        },
-        {
-            "title": "Lorem Ipsum",
-            "startTime": "7:40",
-            "endTime": "8:40",
-            "location": "CEAF",
-            "anchor": "/evento/550e8400-e29b-41d4-a716-446655440000"
-        },
-        {
-            "title": "Lorem Ipsum",
-            "startTime": "7:40",
-            "endTime": "8:40",
-            "location": "CEAF",
-            "anchor": "/evento/550e8400-e29b-41d4-a716-446655440000"
-        }],
-        "QUA": [],
-        "QUI": [{
-            "title": "Qui",
-            "startTime": "7:40",
-            "endTime": "8:40",
-            "location": "CEAF",
-            "anchor": "/evento/550e8400-e29b-41d4-a716-446655440000"
-        }],
-        "SEX": [{
-            "title": "Sex",
-            "startTime": "7:40",
-            "endTime": "8:40",
-            "location": "CEAF",
-            "anchor": "/evento/550e8400-e29b-41d4-a716-446655440000"
-        },
-        {
-            "title": "Lorem Ipsum",
-            "startTime": "7:40",
-            "endTime": "8:40",
-            "location": "CEAF",
-            "anchor": "/evento/550e8400-e29b-41d4-a716-446655440000"
-        },],
-    }
 
     return (
         <>
             <Navbar text="Minha Agenda" anchor="/home"></Navbar>
             <div className="w-full flex justify-content-center">
-                <DayButton />
+                <DayButton setActualDay={setActualDay} />
             </div>
             <div className="w-full flex justify-content-center mt-3">
                 <div className="grid md:col-10 col-12 md:gap-3 gap-1 justify-content-center">
-                    {events && events.map((event, index) => (
-                        <EventButton key={index} index={index + actualDay * 2} title={event.title} startTime={event.startTime} endTime={event.endTime} location={event.location} anchor={event.anchor}></EventButton>
-                    ))}
+                    {loading ? (
+                        <p>Carregando seus eventos...</p>
+                    ) : error ? (
+                        <p className="p-error">{error}</p>
+                    ) : (
+                        events.map((event, index) => (
+                            <EventButton
+                                key={index}
+                                index={index + actualDay * 2}
+                                title={event.name}
+                                startTime={event.start_date}
+                                endTime={event.end_date}
+                                location={event.rooms}
+                                anchor={`evento/${event.event_id}`}
+                            />
+                        ))
+                    )}
                 </div>
             </div>
-            <BottomBar disabled={4}></BottomBar>
+            <BottomBar disabled={2}></BottomBar>
         </>
     )
-
 }
-
-export { hook };
