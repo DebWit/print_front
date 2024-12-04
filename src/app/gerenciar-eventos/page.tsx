@@ -124,8 +124,8 @@ export default function GerenciarEventos() {
                                 <p>{evento.description}</p>
                                 <p>
                                     <small>
-                                        Início: {new Date(evento.start_date * 1000).toLocaleString()} <br />
-                                        Fim: {new Date(evento.end_date * 1000).toLocaleString()}
+                                        Início: {new Date(evento.start_date).toLocaleString()} <br />
+                                        Fim: {new Date(evento.end_date).toLocaleString()}
                                     </small>
                                 </p>
                                 <a 

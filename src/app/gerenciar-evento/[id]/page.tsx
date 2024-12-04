@@ -28,8 +28,8 @@ export default function GerenciarEvento() {
         name: "Evento de Teste bemmmmm longoo",
         banner: "/login-background.png",
         description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam nec purus ac turpis tincidunt.",
-        start_date: new Date(1732725960 * 1000),
-        end_date: new Date(1734725960 * 1000),
+        start_date: new Date(1732725960),
+        end_date: new Date(1734725960),
         rooms: { "H204": 30, "H205": 40 },
     });
 

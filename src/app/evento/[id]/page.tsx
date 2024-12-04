@@ -43,6 +43,9 @@ export default function Evento() {
           },
         }
       );
+      if (id in Object.keys(response.data.subscribers)){
+        setSubscribed(true);
+      }
       console.log(response.data)
       setEvent(response.data);
     } catch (err: any) {
@@ -54,7 +57,7 @@ export default function Evento() {
 
   const handleSubscription = async () => {
     try {
-      setIsProcessing(true); // Ativar estado de carregamento
+      setIsProcessing(true); 
 
       const msalInstance = await getMsalInstance();
       const accounts = msalInstance.getAllAccounts();
