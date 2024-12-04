@@ -71,11 +71,11 @@ export default function GerenciarNotificacoes() {
         }
     };
 
-    const filteredNotificacoes = notificacoes.filter(notificacao =>
+    const filteredNotificacoes = notificacoes.filter((notificacao: {title: string}) =>
         notificacao.title.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
-    const deleteNotification = async (notification_id) => {
+    const deleteNotification = async (notification_id: any) => {
         try {
             const msalInstance = await getMsalInstance();
             const accounts = msalInstance.getAllAccounts();
@@ -100,7 +100,7 @@ export default function GerenciarNotificacoes() {
             );
 
             setNotificacoes(
-                notificacoes.filter(notificacao => notificacao.notification_id !== notification_id)
+                notificacoes.filter((notificacao: {notification_id: any}) => notificacao.notification_id !== notification_id)
             );
         } catch (err: any) {
             setError(err.response ? err.response.data.message : err.message);
@@ -127,7 +127,7 @@ export default function GerenciarNotificacoes() {
             <div className="grid flex justify-content-center mt-2 mx-0">
                 {loading && <p>Carregando notificações...</p>}
                 {error && <p>Erro ao carregar notificações: {error}</p>}
-                {!loading && !error && filteredNotificacoes.map((notificacao) => (
+                {!loading && !error && filteredNotificacoes.map((notificacao: any) => (
                     <div key={notificacao.notification_id} className="col-11 lg:col-8">
                         <div className="p-card">
                             <div className="p-card-body">

@@ -51,7 +51,7 @@ export default function CriarCurso() {
                 }
 
                 setIsAdmin(true);
-            } catch (err) {
+            } catch (err: any) {
                 setError(err.message);
             }
         };

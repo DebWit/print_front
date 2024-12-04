@@ -11,7 +11,7 @@ import axios from 'axios';
 import { getMsalInstance } from '../../msalInstance';
 
 export default function CriarEvento() {
-    const [formData, setFormData] = useState({
+    const [formData, setFormData]: any = useState({
         event_id: '',
         name: '',
         description: '',
@@ -50,7 +50,7 @@ export default function CriarEvento() {
                 }
 
                 setIsAdmin(true);
-            } catch (err) {
+            } catch (err: any) {
                 setError(err.message);
             }
         };
@@ -60,14 +60,14 @@ export default function CriarEvento() {
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
-        setFormData((prev) => ({
+        setFormData((prev:any) => ({
             ...prev,
             [name]: value,
         }));
     };
 
     const handleDateChange = (field: 'start_date' | 'end_date', value: Date) => {
-        setFormData((prev) => ({
+        setFormData((prev:any) => ({
             ...prev,
             [field]: value,
         }));
@@ -75,23 +75,23 @@ export default function CriarEvento() {
 
     const handleAddRoom = () => {
         const newRoomName = `Sala${Object.keys(formData.rooms).length + 1}`;
-        setFormData((prev) => ({
+        setFormData((prev:any) => ({
             ...prev,
             rooms: { ...prev.rooms, [newRoomName]: 0 },
         }));
     };
 
     const handleRemoveRoom = (roomName: string) => {
-        const updatedRooms = { ...formData.rooms };
+        const updatedRooms: any = { ...formData.rooms };
         delete updatedRooms[roomName];
-        setFormData((prev) => ({
+        setFormData((prev:any) => ({
             ...prev,
             rooms: updatedRooms,
         }));
     };
 
     const handleRoomChange = (roomName: string, value: number) => {
-        setFormData((prev) => ({
+        setFormData((prev:any) => ({
             ...prev,
             rooms: { ...prev.rooms, [roomName]: value },
         }));
@@ -215,7 +215,7 @@ export default function CriarEvento() {
                                     placeholder="Nome da Sala"
                                     value={roomName}
                                     onChange={(e) =>
-                                        setFormData((prev) => ({
+                                        setFormData((prev: any) => ({
                                             ...prev,
                                             rooms: {
                                                 ...prev.rooms,
