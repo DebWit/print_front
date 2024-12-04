@@ -9,7 +9,7 @@ import CardPadrao from "@/app/components/CardEntidades";
 import "../style.css";
 
 export default function Entidade() {
-    const [dados, setDados] = useState([]);
+    const [dados, setDados]: any = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
@@ -56,7 +56,7 @@ export default function Entidade() {
             <div className="grid flex flex-wrap justify-content-center gap-2 p-2 m-0">
                 {loading && <p>Carregando Entidades...</p>}
                 {error && <p>Erro ao carregar entidades: {error}</p>}
-                {!loading && !error && dados['student_organizations']?.map((key) => (
+                {!loading && !error && dados['student_organizations']?.map((key: any) => (
                     <div
                         className="col-12 lg:col-3 md:col-4 sm:col-6 mt-2"
                         key={key.stu_org_id}

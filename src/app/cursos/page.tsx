@@ -9,7 +9,7 @@ import "./style.css";
 import BottomBar from "../components/BottomBar";
 
 export default function Cursos() {
-    const [dados, setDados] = useState([]);
+    const [dados, setDados]:any = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
@@ -54,7 +54,7 @@ export default function Cursos() {
             <div className="grid flex flex-row justify-content-center m-0">
                 {loading && <p>Carregando Cursos...</p>}
                 {error && <p>Erro ao carregar cursos: {error}</p>}
-                {!loading && !error && dados['courses']?.map((key) => (
+                {!loading && !error && dados['courses']?.map((key: any) => (
                     <div className="col-12 lg:col-3 md:col-4 sm:col-6 mt-2 m-0" key={key.course_id}>
                         <CardPadrao dados={key} />
                     </div>
