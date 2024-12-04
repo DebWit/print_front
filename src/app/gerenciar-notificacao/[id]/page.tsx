@@ -25,9 +25,10 @@ export default function GerenciarNotificacao() {
     });
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
+    const [isAdmin, setIsAdmin] = useState(false);  
 
     useEffect(() => {
-        const fetchNotification = async () => {
+        const authenticateUser = async () => {
             try {
                 const msalInstance = await getMsalInstance();
                 const accounts = msalInstance.getAllAccounts();
@@ -36,37 +37,52 @@ export default function GerenciarNotificacao() {
                     throw new Error("Usuário não autenticado. Faça login novamente.");
                 }
 
-                const tokenResponse = await msalInstance.acquireTokenSilent({
-                    scopes: ["User.Read"],
-                    account: accounts[0],
-                });
+                const username = accounts[0].username.split('@')[0];
+                const isCommonUser = /^\d{2}\.\d{5}-\d$/.test(username);
 
-                const response = await axios.post(
-                    `https://fkohtz7d4a.execute-api.sa-east-1.amazonaws.com/prod/get-notification`,
-                    { notification_id: id },
-                    {
-                        headers: {
-                            Authorization: `Bearer ${tokenResponse.accessToken}`,
-                        },
-                    }
-                );
+                if (isCommonUser) {
+                    throw new Error("Você não tem permissão para acessar esta página.");
+                }
 
-                console.log("Fetched Notification:", response.data);
-                setData(response.data);
+                setIsAdmin(true);
+                fetchNotification();  
             } catch (err: any) {
-                console.error("Error fetching notification:", err);
-                setError(err.response ? err.response.data.message : err.message);
-            } finally {
-                setLoading(false);
+                setError(err.message);
             }
         };
 
-        if (id) {
-            fetchNotification();
-        } else {
+        authenticateUser();
+    }, []);
+
+    const fetchNotification = async () => {
+        try {
+            const msalInstance = await getMsalInstance();
+            const accounts = msalInstance.getAllAccounts();
+
+            const tokenResponse = await msalInstance.acquireTokenSilent({
+                scopes: ["User.Read"],
+                account: accounts[0],
+            });
+
+            const response = await axios.post(
+                `https://fkohtz7d4a.execute-api.sa-east-1.amazonaws.com/prod/get-notification`,
+                { notification_id: id },
+                {
+                    headers: {
+                        Authorization: `Bearer ${tokenResponse.accessToken}`,
+                    },
+                }
+            );
+
+            console.log("Fetched Notification:", response.data);
+            setData(response.data);
+        } catch (err: any) {
+            console.error("Error fetching notification:", err);
+            setError(err.response ? err.response.data.message : err.message);
+        } finally {
             setLoading(false);
         }
-    }, [id]);
+    };
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
@@ -131,7 +147,10 @@ export default function GerenciarNotificacao() {
             setError(err.response ? err.response.data.message : err.message);
         }
     };
-    
+
+    if (!isAdmin) {
+        return <div className="p-error text-center">Você não tem permissão para acessar esta página.</div>;
+    }
 
     if (loading) {
         return <div>Carregando...</div>;

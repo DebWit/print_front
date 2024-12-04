@@ -9,6 +9,7 @@ interface User {
     member_id: string;
     name: string;
     email: string;
+    activites: Array<string>;
 }
 
 export default function GerenciarUsuarios() {
@@ -16,9 +17,10 @@ export default function GerenciarUsuarios() {
     const [users, setUsers] = useState<User[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+    const [isAdmin, setIsAdmin] = useState(false); 
 
     useEffect(() => {
-        const fetchUsers = async () => {
+        const authenticateUser = async () => {
             try {
                 const msalInstance = await getMsalInstance();
                 const accounts = msalInstance.getAllAccounts();
@@ -27,35 +29,62 @@ export default function GerenciarUsuarios() {
                     throw new Error("Usuário não autenticado. Faça login novamente.");
                 }
 
-                const tokenResponse = await msalInstance.acquireTokenSilent({
-                    scopes: ["User.Read"],
-                    account: accounts[0],
-                });
+                const username = accounts[0].username.split('@')[0];
+                const isCommonUser = /^\d{2}\.\d{5}-\d$/.test(username); 
 
-                const response = await axios.get(
-                    `https://fkohtz7d4a.execute-api.sa-east-1.amazonaws.com/prod/get-all-members`,
-                    {
-                        headers: {
-                            Authorization: `Bearer ${tokenResponse.accessToken}`,
-                        },
-                    }
-                );
+                if (isCommonUser) {
+                    throw new Error("Você não tem permissão para acessar esta página.");
+                }
 
-                setUsers(response.data.members);
+                setIsAdmin(true);  
+                fetchUsers();  
             } catch (err: any) {
-                setError(err.response ? err.response.data.message : err.message);
-            } finally {
-                setLoading(false);
+                setError(err.message); 
             }
         };
 
-        fetchUsers();
+        authenticateUser();
     }, []);
 
+    const fetchUsers = async () => {
+        try {
+            const msalInstance = await getMsalInstance();
+            const accounts = msalInstance.getAllAccounts();
+
+            if (accounts.length === 0) {
+                throw new Error("Usuário não autenticado. Faça login novamente.");
+            }
+
+            const tokenResponse = await msalInstance.acquireTokenSilent({
+                scopes: ["User.Read"],
+                account: accounts[0],
+            });
+
+            const response = await axios.get(
+                `https://fkohtz7d4a.execute-api.sa-east-1.amazonaws.com/prod/get-all-members`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${tokenResponse.accessToken}`,
+                    },
+                }
+            );
+
+            setUsers(response.data.members);
+        } catch (err: any) {
+            setError(err.response ? err.response.data.message : err.message);
+        } finally {
+            setLoading(false);
+        }
+    };
+
     const filteredUsers = users.filter(user =>
-        user.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
+        user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         user.email.toLowerCase().includes(searchTerm.toLowerCase())
     );
+
+    if (!isAdmin) {  
+        return <div className="p-error text-center">Você não tem permissão para acessar esta página.</div>;
+    }
 
     if (loading) {
         return <p>Carregando usuários...</p>;

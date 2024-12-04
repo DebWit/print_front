@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { InputTextarea } from "primereact/inputtextarea";
 import { InputText } from "primereact/inputtext";
 import { FloatLabel } from "primereact/floatlabel";
@@ -31,6 +31,33 @@ export default function CriarCurso() {
 
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
+    const [isAdmin, setIsAdmin] = useState(false);
+
+    useEffect(() => {
+        const authenticateUser = async () => {
+            try {
+                const msalInstance = await getMsalInstance();
+                const accounts = msalInstance.getAllAccounts();
+
+                if (accounts.length === 0) {
+                    throw new Error("Usuário não autenticado. Faça login novamente.");
+                }
+
+                const username = accounts[0].username.split("@")[0];
+                const isCommonUser = /^\d{2}\.\d{5}-\d$/.test(username);
+
+                if (isCommonUser) {
+                    throw new Error("Você não tem permissão para acessar esta página.");
+                }
+
+                setIsAdmin(true);
+            } catch (err: any) {
+                setError(err.message);
+            }
+        };
+
+        authenticateUser();
+    }, []);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
@@ -84,7 +111,6 @@ export default function CriarCurso() {
                 account: accounts[0],
             });
 
-            // Enviar os dados para a API do backend
             const response = await axios.post(
                 'https://fkohtz7d4a.execute-api.sa-east-1.amazonaws.com/prod/create-course',
                 { ...data },
@@ -103,6 +129,10 @@ export default function CriarCurso() {
             setLoading(false);
         }
     };
+
+    if (!isAdmin) {
+        return <div className="p-error text-center">Você não tem permissão para acessar esta página.</div>;
+    }
 
     return (
         <>
@@ -184,10 +214,8 @@ export default function CriarCurso() {
                     </div>
 
                     <div className="form-group flex justify-content-end">
-                        <Button label="Criar Curso" type="submit" disabled={loading} />
+                        <Button label="Criar Curso" type="submit" />
                     </div>
-                    {loading && <div>Carregando...</div>}
-                    {error && <div className="p-error">{error}</div>}
                 </form>
             </div>
         </>

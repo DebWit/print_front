@@ -6,6 +6,7 @@ import { getMsalInstance } from "../../msalInstance";
 import Navbar from "../components/Navbar";
 import CardPadrao from "../components/CardCursos";
 import "./style.css";
+import BottomBar from "../components/BottomBar";
 
 export default function Cursos() {
     const [dados, setDados] = useState([]);
@@ -20,25 +21,23 @@ export default function Cursos() {
 
                 if (accounts.length === 0) {
                     throw new Error("Usuário não autenticado. Faça login novamente.");
+                } else {
+                    const tokenResponse = accounts[0].idToken;
+                    
+                    console.log("Access Token:", tokenResponse);
+    
+                    const response = await axios.get(
+                        "https://fkohtz7d4a.execute-api.sa-east-1.amazonaws.com/prod/get-all-courses",
+                        {
+                            headers: {
+                                Authorization: `Bearer ${tokenResponse}`,
+                            },
+                        }
+                    );
+    
+                    setDados(response.data);
                 }
 
-                const tokenResponse = await msalInstance.acquireTokenSilent({
-                    scopes: ["User.Read"],
-                    account: accounts[0],
-                });
-
-                console.log("Access Token:", tokenResponse.accessToken);
-
-                const response = await axios.get(
-                    "https://fkohtz7d4a.execute-api.sa-east-1.amazonaws.com/prod/get-all-courses",
-                    {
-                        headers: {
-                            Authorization: `Bearer ${tokenResponse.accessToken}`,
-                        },
-                    }
-                );
-
-                setDados(response.data);
             } catch (err: any) {
                 setError(err.response ? err.response.data.message : err.message);
             } finally {
@@ -61,6 +60,7 @@ export default function Cursos() {
                     </div>
                 ))}
             </div>
+            <BottomBar />
         </>
     );
 }

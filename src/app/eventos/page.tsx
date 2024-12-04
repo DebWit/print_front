@@ -6,7 +6,7 @@ import DayButton, { todayDay } from "../components/DayButtonEvents";
 import EventButton from "../components/EventButton";
 import { InputText } from "primereact/inputtext";
 import { Button } from "primereact/button";
-import axios from "axios"; // Adicionando o axios
+import axios from "axios";
 
 import "./style.css";
 
@@ -89,7 +89,7 @@ export default function Evento() {
                     ) : error ? (
                         <p className="p-error">{error}</p>
                     ) : (
-                        events.map((event, index) => (
+                        events.map((event:any, index) => (
                             <EventButton 
                                 key={index} 
                                 index={index + actualDay * 2} 

@@ -47,7 +47,7 @@ export default function DayButton({ setActualDay }: { setActualDay: (day: number
             data[i] = i === day;
         }
         todayDay = day;
-        setActualDay(day); // Call the prop function to update the day
+        setActualDay(day);
         return data;
     };
 

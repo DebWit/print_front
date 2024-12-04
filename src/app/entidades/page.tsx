@@ -13,40 +13,39 @@ export default function Entidade() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
-    useEffect(() => {
-        const fetchEntidades = async () => {
-            try {
-                const msalInstance = await getMsalInstance();
-                const accounts = msalInstance.getAllAccounts();
+    const fetchEntidades = async () => {
+        try {
+            let msalInstance = await getMsalInstance();
+            let accounts = msalInstance.getAllAccounts();
 
-                if (accounts.length === 0) {
-                    throw new Error("Usuário não autenticado. Faça login novamente.");
-                }
-
-                const tokenResponse = await msalInstance.acquireTokenSilent({
-                    scopes: ["User.Read"],
-                    account: accounts[0],
-                });
-
-                console.log("Access Token:", tokenResponse.accessToken);
-
-                const response = await axios.get(
+            if (accounts.length === 0) {
+                throw new Error("Usuário não autenticado. Faça login novamente.");
+            } else {
+                console.log("Usuário autenticado!", accounts[0])
+                const tokenResponse = accounts[0].idToken;
+    
+                console.log("Access Token:", tokenResponse);
+    
+                let response = await axios.get(
                     "https://fkohtz7d4a.execute-api.sa-east-1.amazonaws.com/prod/get-all-student-organizations", 
                     {
                         headers: {
-                            Authorization: `Bearer ${tokenResponse.accessToken}`,
+                            Authorization: `Bearer ${tokenResponse}`,
                         }
                     }
                 );
-
+    
                 setDados(response.data);
-            } catch (err: any) {
-                setError(err.response ? err.response.data.message : err.message);
-            } finally {
-                setLoading(false);
             }
-        };
 
+        } catch (err: any) {
+            setError(err.response ? err.response.data.message : err.message);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
         fetchEntidades();
     }, []);
 
