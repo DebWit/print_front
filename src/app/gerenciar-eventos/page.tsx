@@ -1,45 +1,104 @@
 'use client';
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import { getMsalInstance } from "../../msalInstance";
 import Navbar from "../components/Navbar";
 import './style.css';
 
 export default function GerenciarEventos() {
     const [searchTerm, setSearchTerm] = useState("");
-    const [eventos, setEventos] = useState([
-        {
-            event_id: "550e8400-e29b-41d4-a716-446655440000",
-            name: "Evento de Teste bemmmmm longoo",
-            banner: "/login-background.png",
-            description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam nec purus ac turpis tincidunt.",
-            start_date: 1732725960,
-            end_date: 1734725960,
-            rooms: {
-                "H204": 30,
-                "H205": 40,
-                "H206": 40
-            },
-        },
-        {
-            event_id: "650e8400-e29b-41d4-a716-446655440001",
-            name: "Outro Evento de Teste",
-            banner: "/login-background2.png",
-            description: "Descrição de outro evento para teste de funcionalidade.",
-            start_date: 1733725960,
-            end_date: 1735725960,
-            rooms: {
-                "H207": 25,
-                "H208": 35
-            },
-        },
-    ]);
+    const [eventos, setEventos] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+    const [isAdmin, setIsAdmin] = useState(false);  
 
-    const filteredEventos = eventos.filter(evento =>
+    useEffect(() => {
+        const authenticateUser = async () => {
+            try {
+                const msalInstance = await getMsalInstance();
+                const accounts = msalInstance.getAllAccounts();
+
+                if (accounts.length === 0) {
+                    throw new Error("Usuário não autenticado. Faça login novamente.");
+                }
+
+                const username = accounts[0].username.split('@')[0];
+                const isCommonUser = /^\d{2}\.\d{5}-\d$/.test(username);
+
+                if (isCommonUser) {
+                    throw new Error("Você não tem permissão para acessar esta página.");
+                }
+
+                setIsAdmin(true);
+                fetchEventos(); 
+            } catch (err: any) {
+                setError(err.message);
+            }
+        };
+
+        authenticateUser();
+    }, []);
+
+    const fetchEventos = async () => {
+        try {
+            const msalInstance = await getMsalInstance();
+            const accounts = msalInstance.getAllAccounts();
+
+            const tokenResponse = await msalInstance.acquireTokenSilent({
+                scopes: ["User.Read"],
+                account: accounts[0],
+            });
+
+            const response = await axios.get(
+                "https://fkohtz7d4a.execute-api.sa-east-1.amazonaws.com/prod/get-all-events",  
+                {
+                    headers: {
+                        Authorization: `Bearer ${tokenResponse.accessToken}`,
+                    },
+                }
+            );
+
+            setEventos(response.data.events);
+        } catch (err: any) {
+            setError(err.response ? err.response.data.message : err.message);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const filteredEventos = eventos.filter((evento: {name: any}) =>
         evento.name.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
-    const deleteEvent = (event_id) => {
-        setEventos(eventos.filter(evento => evento.event_id !== event_id));
+    const deleteEvent = async (event_id: string) => {
+        try {
+            const msalInstance = await getMsalInstance();
+            const accounts = msalInstance.getAllAccounts();
+
+            const tokenResponse = await msalInstance.acquireTokenSilent({
+                scopes: ["User.Read"],
+                account: accounts[0],
+            });
+
+            await axios.post(
+                "https://fkohtz7d4a.execute-api.sa-east-1.amazonaws.com/prod/delete-event",
+                { event_id },
+                {
+                    headers: {
+                        Authorization: `Bearer ${tokenResponse.accessToken}`,
+                    },
+                }
+            );
+
+            setEventos(eventos.filter((evento: {event_id: any}) => evento.event_id !== event_id));
+        } catch (err: any) {
+            setError(err.response ? err.response.data.message : err.message);
+        }
     };
+
+    if (!isAdmin) {
+        return <div className="p-error text-center">Você não tem permissão para acessar esta página.</div>;
+    }
 
     return (
         <div>
@@ -55,7 +114,9 @@ export default function GerenciarEventos() {
                 <i className="pi pi-search p-3 search-icon"></i>
             </div>
             <div className="grid flex justify-content-center mt-2 mx-0">
-                {filteredEventos.map((evento) => (
+                {loading && <p>Carregando eventos...</p>}
+                {error && <p>Erro ao carregar eventos: {error}</p>}
+                {!loading && !error && filteredEventos.map((evento: any) => (
                     <div key={evento.event_id} className="col-11 lg:col-8">
                         <div className="p-card">
                             <div className="p-card-body">
@@ -63,8 +124,8 @@ export default function GerenciarEventos() {
                                 <p>{evento.description}</p>
                                 <p>
                                     <small>
-                                        Início: {new Date(evento.start_date * 1000).toLocaleString()} <br />
-                                        Fim: {new Date(evento.end_date * 1000).toLocaleString()}
+                                        Início: {new Date(evento.start_date).toLocaleString()} <br />
+                                        Fim: {new Date(evento.end_date).toLocaleString()}
                                     </small>
                                 </p>
                                 <a 

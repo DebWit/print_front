@@ -1,32 +1,115 @@
 'use client';
-import React, { useState } from "react";
+
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import { getMsalInstance } from "../../msalInstance";
 import Navbar from "../components/Navbar";
 import './style.css';
 
 export default function GerenciarNotificacoes() {
     const [searchTerm, setSearchTerm] = useState("");
-    const [notificacoes, setNotificacoes] = useState([
-        {
-            notification_id: "d65308fd-6940-4d6d-92b5-6247d8af834a",
-            title: "Notificação 1",
-            timestamp: 1732725960,
-            description: "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Laudantium perferendis fuga veritatis tempore nemo. At maiores exercitationem nihil rem doloremque suscipit dolorem, expedita, cum porro eaque dignissimos quasi eum nostrum.",
-        },
-        {
-            notification_id: "a82308fd-1234-4d6d-92b5-7687d8af834a",
-            title: "Notificação 2",
-            timestamp: 1732725960,
-            description: "Esta é uma segunda notificação com informações diferentes para teste.",
-        },
-    ]);
+    const [notificacoes, setNotificacoes] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+    const [isAdmin, setIsAdmin] = useState(false);  
 
-    const filteredNotificacoes = notificacoes.filter(notificacao =>
+    useEffect(() => {
+        const authenticateUser = async () => {
+            try {
+                const msalInstance = await getMsalInstance();
+                const accounts = msalInstance.getAllAccounts();
+
+                if (accounts.length === 0) {
+                    throw new Error("Usuário não autenticado. Faça login novamente.");
+                }
+
+                const username = accounts[0].username.split('@')[0];
+                const isCommonUser = /^\d{2}\.\d{5}-\d$/.test(username);
+
+                if (isCommonUser) {
+                    throw new Error("Você não tem permissão para acessar esta página.");
+                }
+
+                setIsAdmin(true);
+                fetchNotificacoes(); 
+            } catch (err: any) {
+                setError(err.message);
+            }
+        };
+
+        authenticateUser();
+    }, []);
+
+    const fetchNotificacoes = async () => {
+        try {
+            const msalInstance = await getMsalInstance();
+            const accounts = msalInstance.getAllAccounts();
+
+            if (accounts.length === 0) {
+                throw new Error("Usuário não autenticado. Faça login novamente.");
+            }
+
+            const tokenResponse = await msalInstance.acquireTokenSilent({
+                scopes: ["User.Read"],
+                account: accounts[0],
+            });
+
+            const response = await axios.get(
+                "https://fkohtz7d4a.execute-api.sa-east-1.amazonaws.com/prod/get-all-notifications",
+                {
+                    headers: {
+                        Authorization: `Bearer ${tokenResponse.accessToken}`,
+                    },
+                }
+            );
+
+            setNotificacoes(response.data.notifications);
+        } catch (err: any) {
+            setError(err.response ? err.response.data.message : err.message);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const filteredNotificacoes = notificacoes.filter((notificacao: {title: string}) =>
         notificacao.title.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
-    const deleteNotification = (notification_id) => {
-        setNotificacoes(notificacoes.filter(notificacao => notificacao.notification_id !== notification_id));
+    const deleteNotification = async (notification_id: any) => {
+        try {
+            const msalInstance = await getMsalInstance();
+            const accounts = msalInstance.getAllAccounts();
+
+            if (accounts.length === 0) {
+                throw new Error("Usuário não autenticado. Faça login novamente.");
+            }
+
+            const tokenResponse = await msalInstance.acquireTokenSilent({
+                scopes: ["User.Read"],
+                account: accounts[0],
+            });
+
+            await axios.post(
+                `https://fkohtz7d4a.execute-api.sa-east-1.amazonaws.com/prod/delete-notification`,
+                { notification_id },
+                {
+                    headers: {
+                        Authorization: `Bearer ${tokenResponse.accessToken}`,
+                    },
+                }
+            );
+
+            setNotificacoes(
+                notificacoes.filter((notificacao: {notification_id: any}) => notificacao.notification_id !== notification_id)
+            );
+        } catch (err: any) {
+            setError(err.response ? err.response.data.message : err.message);
+        }
     };
+
+    if (!isAdmin) {
+        return <div className="p-error text-center">Você não tem permissão para acessar esta página.</div>;
+    }
 
     return (
         <div>
@@ -42,13 +125,15 @@ export default function GerenciarNotificacoes() {
                 <i className="pi pi-search p-3 search-icon"></i>
             </div>
             <div className="grid flex justify-content-center mt-2 mx-0">
-                {filteredNotificacoes.map((notificacao) => (
+                {loading && <p>Carregando notificações...</p>}
+                {error && <p>Erro ao carregar notificações: {error}</p>}
+                {!loading && !error && filteredNotificacoes.map((notificacao: any) => (
                     <div key={notificacao.notification_id} className="col-11 lg:col-8">
                         <div className="p-card">
                             <div className="p-card-body">
                                 <h4>{notificacao.title}</h4>
                                 <p>{notificacao.description}</p>
-                                <p><small>{new Date(notificacao.timestamp * 1000).toLocaleString()}</small></p>
+                                <p><small>{new Date(notificacao.creation_date).toLocaleString()}</small></p>
                                 <a 
                                     className="mr-1 p-button p-button-warning" 
                                     href={`/gerenciar-notificacao/${notificacao.notification_id}`}
@@ -65,15 +150,15 @@ export default function GerenciarNotificacoes() {
                         </div>
                     </div>
                 ))}
-            <div className="mt-4 lg:col-8 col-12">
-                <a 
-                    href="/criar-notificacao" 
-                    className="p-button p-component add mr-2"
+                <div className="mt-4 lg:col-8 col-12">
+                    <a 
+                        href="/criar-notificacao" 
+                        className="p-button p-component add mr-2"
                     >
-                    +
-                </a>
+                        +
+                    </a>
+                </div>
             </div>
-        </div>
         </div>
     );
 }

@@ -5,30 +5,23 @@ import { FloatLabel } from "primereact/floatlabel";
 import Navbar from '@/app/components/Navbar';
 import InputPhoto from '@/app/components/InputPhoto';
 import { useParams } from "next/navigation";
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import '../style.css';
 import { Button } from "primereact/button";
+import { getMsalInstance } from "../../../msalInstance";
+import axios from "axios";
 
 export default function GerenciarCurso() {
     const { id } = useParams();
-    const ida = '3d9221a7-ef6b-4b6a-90ed-aa6de72c5504';
-
-    if (id !== ida) {
-        return <div>Curso não encontrado!</div>;
-    }
-
-    const current_data = {
-        course_id: '3d9221a7-ef6b-4b6a-90ed-aa6de72c5504',
-        name: "Ciência da Computação",
-        course_photo: "/background-splash.png",
-        coordinator: "Rudolf Theoderich Bühler",
-        coordinator_photo: "/background-splash.png",
-        description:
-            "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Laborum, perspiciatis! Lorem ipsum dolor sit amet consectetur, adipisicing elit. Aperiam velit similique laborum dolorem id ipsum beatae ipsa. Mollitia, facere! Lorem ipsum dolor sit amet consectetur, adipisicing elit. Reprehenderit, enim.",
-        link: "maua.br",
-    };
-
-    const [data, setData] = useState(current_data);
+    const [data, setData] = useState({
+        course_id: '',
+        name: '',
+        course_photo: '',
+        coordinator: '',
+        coordinator_photo: '',
+        description: '',
+        link: ''
+    });
     const [errors, setErrors] = useState({
         name: "",
         coordinator: "",
@@ -37,6 +30,67 @@ export default function GerenciarCurso() {
         course_photo: "",
         coordinator_photo: "",
     });
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState('');
+    const [isAdmin, setIsAdmin] = useState(false);  
+
+
+    useEffect(() => {
+        const authenticateUser = async () => {
+            try {
+                const msalInstance = await getMsalInstance();
+                const accounts = msalInstance.getAllAccounts();
+
+                if (accounts.length === 0) {
+                    throw new Error("Usuário não autenticado. Faça login novamente.");
+                }
+
+                const username = accounts[0].username.split('@')[0];
+                const isCommonUser = /^\d{2}\.\d{5}-\d$/.test(username);
+
+                if (isCommonUser) {
+                    throw new Error("Você não tem permissão para acessar esta página.");
+                }
+
+                setIsAdmin(true);
+                fetchCourse();  
+            } catch (err: any) {
+                setError(err.message);
+            }
+        };
+
+        authenticateUser();
+    }, []);
+
+    const fetchCourse = async () => {
+        try {
+            const msalInstance = await getMsalInstance();
+            const accounts = msalInstance.getAllAccounts();
+
+            const tokenResponse = await msalInstance.acquireTokenSilent({
+                scopes: ["User.Read"],
+                account: accounts[0],
+            });
+
+            const response = await axios.post(
+                `https://fkohtz7d4a.execute-api.sa-east-1.amazonaws.com/prod/get-course`,
+                { course_id: id },
+                {
+                    headers: {
+                        Authorization: `Bearer ${tokenResponse.accessToken}`,
+                    },
+                }
+            );
+
+            console.log("Fetched Course:", response.data);
+            setData(response.data);
+        } catch (err: any) {
+            console.error("Error fetching course:", err);
+            setError(err.response ? err.response.data.message : err.message);
+        } finally {
+            setLoading(false);
+        }
+    };
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
@@ -70,9 +124,66 @@ export default function GerenciarCurso() {
         return Object.keys(newErrors).length === 0;
     };
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+    
+        if (!validateForm()) return;
+    
+        try {
+            const msalInstance = await getMsalInstance();
+            const accounts = msalInstance.getAllAccounts();
+    
+            if (accounts.length === 0) {
+                throw new Error("Usuário não autenticado. Faça login novamente.");
+            }
+    
+            const tokenResponse = await msalInstance.acquireTokenSilent({
+                scopes: ["User.Read"],
+                account: accounts[0],
+            });
+    
+            const updatedData = {
+                ...data,
+                update_date: Date.now(),
+            };
+    
+            const response = await axios.post(
+                `https://fkohtz7d4a.execute-api.sa-east-1.amazonaws.com/prod/update-course`,
+                updatedData,
+                {
+                    headers: {
+                        Authorization: `Bearer ${tokenResponse.accessToken}`,
+                    },
+                }
+            );
+                
+            alert("Curso atualizado com sucesso!");
+        } catch (err: any) {
+            console.error("Error updating course:", err);
+            setError(err.response ? err.response.data.message : err.message);
+        }
     };
+
+    if (!isAdmin) {
+        return <div className="p-error text-center">Você não tem permissão para acessar esta página.</div>;
+    }
+
+    if (loading) {
+        return <div>Carregando...</div>;
+    }
+
+    if (error) {
+        return (
+            <div className="error-container">
+                <h2>Erro ao carregar curso:</h2>
+                <p>{error}</p>
+            </div>
+        );
+    }
+
+    if (id !== data.course_id) {
+        return <div>Curso não encontrado!</div>;
+    }
 
     return (
         <>
@@ -146,9 +257,12 @@ export default function GerenciarCurso() {
                         </FloatLabel>
                         {errors.link && <small className="ml-2 p-error">{errors.link}</small>}
                     </div>
-                    <div className="form-group flex justify-content-end">
-                        <Button label="Atualizar Curso" type="submit" />
-                    </div>
+
+                    <Button
+                        label="Atualizar Curso"
+                        type="submit"
+                        className="mt-3 p-button-outlined w-full"
+                    />
                 </form>
             </div>
         </>

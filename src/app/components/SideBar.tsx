@@ -4,7 +4,7 @@ import { Sidebar } from "primereact/sidebar";
 interface Notification {
   notification_id: string;
   title: string;
-  timestamp: number;
+  creation_date: number;
   description: string;
   has_seen: boolean;
 }
@@ -12,7 +12,7 @@ interface Notification {
 interface SidebarNotificacoesProps {
   visible: boolean;
   onHide: () => void;
-  notification: Notification | null;
+  notification: any;
 }
 
 const SidebarNotificacoes: React.FC<SidebarNotificacoesProps> = ({
@@ -25,7 +25,7 @@ const SidebarNotificacoes: React.FC<SidebarNotificacoesProps> = ({
       {notification ? (
         <>
           <h2>{notification.title}</h2>
-          <p>{new Date(notification.timestamp * 1000).toLocaleString()}</p>
+          <p>{new Date(notification.creation_date).toLocaleString()}</p>
           <p>{notification.description}</p>
         </>
       ) : (

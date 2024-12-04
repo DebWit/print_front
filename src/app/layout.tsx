@@ -2,7 +2,7 @@ import "primeflex/primeflex.min.css";
 import "primereact/resources/primereact.min.css";
 import "primereact/resources/themes/lara-light-cyan/theme.css";
 import "primeicons/primeicons.css";
-import MsalProviderWrapper from "../providers/MsalProvider"; // Ajuste o caminho conforme a localização do arquivo
+import MsalProviderWrapper from "../providers/MsalProvider";
 
 export const metadata = {
   title: 'Print',

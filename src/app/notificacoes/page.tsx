@@ -1,68 +1,137 @@
 'use client';
-import { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import { getMsalInstance } from "../../msalInstance";
 import Navbar from "../components/Navbar";
 import SidebarNotificacoes from "../components/SideBar";
 import "./style.css";
+import BottomBar from "../components/BottomBar";
 
 interface Notification {
     notification_id: string;
     title: string;
-    timestamp: number;
+    creation_date: number;
     description: string;
-    has_seen: boolean;
+    has_seen: string[]; // Updated to store member IDs of users who have seen the notification
 }
 
 export default function Notificacoes() {
-    const [notificacoes, setNotificacoes] = useState<Notification[]>([
-        {
-            notification_id: "d65308fd-6940-4d6d-92b5-6247d8af834a",
-            title: "Notificação 1",
-            timestamp: 1732725960,
-            description: "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Laudantium perferendis fuga veritatis tempore nemo. At maiores exercitationem nihil rem doloremque suscipit dolorem, expedita, cum porro eaque dignissimos quasi eum nostrum.",
-            has_seen: false
-        },
-        {
-            notification_id: "a0f0ecf7-e86d-40ab-8bc7-e9d9d9f3c842",
-            title: "Notificação 2",
-            timestamp: 1732801320,
-            description: "Exercitationem perspiciatis dolorum, magni hic error recusandae suscipit iusto nobis est? Consequatur mollitia voluptas officia quaerat nisi sequi quaerat, accusamus ad quisquam. Optio laborum saepe neque nulla.",
-            has_seen: false
-        },
-        {
-            notification_id: "b82edb14-88ea-4754-b67e-b1d0c1a50239",
-            title: "Notificação 3",
-            timestamp: 1732897640,
-            description: "Quis voluptatibus sunt nesciunt similique? Beatae, velit quaerat! Nulla, ipsum deserunt accusantium sapiente eius. Quisquam obcaecati dolorum rerum laborum est tempora, quibusdam nobis quae aliquam praesentium?",
-            has_seen: false
-        },
-        {
-            notification_id: "f1a2d953-e7b5-44a3-b710-c6b50635b02c",
-            title: "Notificação 4",
-            timestamp: 1732983960,
-            description: "Sed enim vitae velit voluptatem repellendus, odio ut, veniam veritatis tempora dignissimos saepe mollitia ab distinctio. Autem neque dolores reprehenderit mollitia doloribus facere.",
-            has_seen: false
-        }
-    ]);
-
+    const [notificacoes, setNotificacoes] = useState<Notification[]>([]);
     const [selectedNotification, setSelectedNotification] = useState<Notification | null>(null);
     const [isSidebarVisible, setSidebarVisible] = useState(false);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
+    const [accounts, setAccounts] = useState<any[]>([]);
 
-    const handleNotificationClick = (notification: Notification) => {
+    useEffect(() => {
+        const initializeMsal = async () => {
+            try {
+                const msalInstance = await getMsalInstance();
+                const msalAccounts = msalInstance.getAllAccounts();
+
+                if (msalAccounts.length === 0) {
+                    throw new Error("Usuário não autenticado. Faça login novamente.");
+                }
+
+                setAccounts(msalAccounts);
+
+                const tokenResponse = await msalInstance.acquireTokenSilent({
+                    scopes: ["User.Read"],
+                    account: msalAccounts[0],
+                });
+
+                const response = await axios.get(
+                    `https://fkohtz7d4a.execute-api.sa-east-1.amazonaws.com/prod/get-all-notifications`,
+                    {
+                        headers: {
+                            Authorization: `Bearer ${tokenResponse.accessToken}`,
+                        },
+                    }
+                );
+                console.log(response.data.notifications)
+                setNotificacoes(response.data.notifications);
+            } catch (err: any) {
+                setError(err.response ? err.response.data.message : err.message);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        initializeMsal();
+    }, []);
+
+    const updateNotificationSeen = async (notification: Notification) => {
+        try {
+            const msalInstance = await getMsalInstance();
+
+            if (accounts.length === 0) {
+                throw new Error("Usuário não autenticado. Faça login novamente.");
+            }
+
+            const tokenResponse = await msalInstance.acquireTokenSilent({
+                scopes: ["User.Read"],
+                account: accounts[0],
+            });
+
+            const memberId = accounts[0].localAccountId;
+
+            await axios.post(
+                `https://fkohtz7d4a.execute-api.sa-east-1.amazonaws.com/prod/update-notification`,
+                {
+                    notification_id: notification.notification_id,
+                    has_seen: notification.has_seen.includes(memberId)
+                        ? notification.has_seen
+                        : [...notification.has_seen, memberId],
+                },
+                {
+                    headers: {
+                        Authorization: `Bearer ${tokenResponse.accessToken}`,
+                    },
+                }
+            );
+        } catch (err: any) {
+            console.error("Erro ao atualizar notificação:", err.response ? err.response.data.message : err.message);
+        }
+    };
+
+    const handleNotificationClick = async (notification: Notification) => {
+        if (accounts.length === 0) {
+            throw new Error("Usuário não autenticado.");
+        }
+
+        const memberId = accounts[0].localAccountId;
+        const updatedNotification = {
+            ...notification,
+            has_seen: notification.has_seen.includes(memberId)
+                ? notification.has_seen
+                : [...notification.has_seen, memberId],
+        };
+
         setSelectedNotification(notification);
         setSidebarVisible(true);
         setNotificacoes((prevNotificacoes) =>
             prevNotificacoes.map((notif) =>
                 notif.notification_id === notification.notification_id
-                    ? { ...notif, has_seen: true }
+                    ? updatedNotification
                     : notif
             )
         );
+
+        await updateNotificationSeen(updatedNotification);
     };
 
-    const formatTimestamp = (timestamp: number): string => {
-        const date = new Date(timestamp * 1000);
+    const formatCreationDate = (creation_date: number): string => {
+        const date = new Date(creation_date);
         return date.toLocaleString();
     };
+
+    if (loading) {
+        return <p>Carregando notificações...</p>;
+    }
+
+    if (error) {
+        return <p>Erro ao carregar notificações: {error}</p>;
+    }
 
     return (
         <>
@@ -77,10 +146,12 @@ export default function Notificacoes() {
                         >
                             <div className="ml-3 lg:ml-0">
                                 <button
-                                    className={`remove-button ml-3 lg:ml-0 ${notification.has_seen ? "seen" : "unseen"}`}
+                                    className={`remove-button ml-3 lg:ml-0 ${notification.has_seen.includes(
+                                        accounts[0]?.localAccountId
+                                    ) ? "seen" : "unseen"}`}
                                 />
                                 <h3>{notification.title}</h3>
-                                <p>{formatTimestamp(notification.timestamp)}</p>
+                                <p>{formatCreationDate(notification.creation_date)}</p>
                             </div>
                             <p>{notification.description}</p>
                         </div>
@@ -92,6 +163,7 @@ export default function Notificacoes() {
                 onHide={() => setSidebarVisible(false)}
                 notification={selectedNotification}
             />
+            <BottomBar />
         </>
     );
 }

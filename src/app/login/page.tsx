@@ -1,37 +1,29 @@
 'use client';
 
-import React, { useEffect } from "react";
-import { useRouter } from "next/navigation";
+import React from "react";
 import { Button } from "primereact/button";
 import { getMsalInstance } from "../../msalInstance";
 import { loginRequest } from "../../msalConfig";
 import "./style.css";
 
 export default function Login() {
-    const router = useRouter();
-
-    useEffect(() => {
-        const checkAuthentication = async () => {
-            try {
-                const msalInstance = await getMsalInstance();
-                const accounts = msalInstance.getAllAccounts();
-
-                if (accounts.length > 0) {
-                    console.log("Usuário já autenticado:", accounts[0]);
-                    router.push("/home");
-                }
-            } catch (error) {
-                console.error("Erro ao verificar autenticação:", error);
-            }
-        };
-
-        checkAuthentication();
-    }, [router]);
-
     const handleLogin = async () => {
         try {
             const msalInstance = await getMsalInstance();
-            await msalInstance.loginRedirect(loginRequest);
+            const loginResponse = await msalInstance.loginPopup(loginRequest);
+
+            if (loginResponse) {
+                console.log("Login bem-sucedido:", loginResponse);
+    
+                const account = msalInstance.getActiveAccount();
+                console.log(account)
+                if (!account) {
+                    msalInstance.setActiveAccount(loginResponse.account);
+                    console.log(account)
+                }
+    
+                window.location.href = "/home";
+            }
         } catch (error) {
             console.error("Erro ao iniciar o login:", error);
         }

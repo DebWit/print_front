@@ -3,10 +3,13 @@ import { InputText } from "primereact/inputtext";
 import { FloatLabel } from "primereact/floatlabel";
 import { Button } from "primereact/button";
 import Navbar from '@/app/components/Navbar';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { InputTextarea } from "primereact/inputtextarea";
 import { Calendar } from "primereact/calendar";
+import { getMsalInstance } from "../../../msalInstance"; 
+import axios from "axios";
 import '../style.css';
+import { useParams } from "next/navigation";
 
 type EventData = {
     event_id: string;
@@ -15,17 +18,18 @@ type EventData = {
     description: string;
     start_date: Date;
     end_date: Date;
-    rooms: Record<string, number>;
+    rooms: Record<string, any>;
 };
 
 export default function GerenciarEvento() {
+    const { id } = useParams();
     const [data, setData] = useState<EventData>({
         event_id: "550e8400-e29b-41d4-a716-446655440000",
         name: "Evento de Teste bemmmmm longoo",
         banner: "/login-background.png",
         description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam nec purus ac turpis tincidunt.",
-        start_date: new Date(1732725960 * 1000),
-        end_date: new Date(1734725960 * 1000),
+        start_date: new Date(1732725960),
+        end_date: new Date(1734725960),
         rooms: { "H204": 30, "H205": 40 },
     });
 
@@ -37,8 +41,68 @@ export default function GerenciarEvento() {
         end_date: "",
         rooms: "",  
     });
+    const [isAdmin, setIsAdmin] = useState(false);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState("");
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    useEffect(() => {
+        const authenticateUser = async () => {
+            try {
+                const msalInstance = await getMsalInstance();
+                const accounts = msalInstance.getAllAccounts();
+
+                if (accounts.length === 0) {
+                    throw new Error("Usuário não autenticado. Faça login novamente.");
+                }
+
+                const username = accounts[0].username.split('@')[0];
+                const isCommonUser = /^\d{2}\.\d{5}-\d$/.test(username);
+
+                if (isCommonUser) {
+                    throw new Error("Você não tem permissão para acessar esta página.");
+                }
+
+                setIsAdmin(true);
+                fetchEventData();
+            } catch (err: any) {
+                setError(err.message);
+            }
+        };
+
+        authenticateUser();
+    }, []);
+
+    const fetchEventData = async () => {
+        try {
+            const msalInstance = await getMsalInstance();
+            const accounts = msalInstance.getAllAccounts();
+
+            const tokenResponse = await msalInstance.acquireTokenSilent({
+                scopes: ["User.Read"],
+                account: accounts[0],
+            });
+
+            const response = await axios.post(
+                `https://fkohtz7d4a.execute-api.sa-east-1.amazonaws.com/prod/get-event`,
+                { event_id: id },
+                {
+                    headers: {
+                        Authorization: `Bearer ${tokenResponse.accessToken}`,
+                    },
+                }
+            );
+
+            console.log("Fetched Event Data:", response.data);
+            setData(response.data);
+        } catch (err: any) {
+            console.error("Error fetching event data:", err);
+            setError(err.response ? err.response.data.message : err.message);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleChange = (e: any) => {
         const { name, value } = e.target;
         setData((prev) => ({
             ...prev,
@@ -92,6 +156,7 @@ export default function GerenciarEvento() {
         if (!data.description) newErrors.description = 'Descrição é obrigatória.';
         if (!data.start_date) newErrors.start_date = 'Data de início é obrigatória.';
         if (!data.end_date) newErrors.end_date = 'Data de fim é obrigatória.';
+        if (data.start_date >= data.end_date) newErrors.end_date = 'A data de fim deve ser maior que a data de início.';
 
         if (roomOrder.length === 0) {
             newErrors.rooms = 'Pelo menos uma sala deve ser criada.';
@@ -101,9 +166,62 @@ export default function GerenciarEvento() {
         return Object.keys(newErrors).length === 0;
     };
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+
+        if (validateForm()) {
+            try {
+                const msalInstance = await getMsalInstance();
+                const accounts = msalInstance.getAllAccounts();
+
+                if (accounts.length === 0) {
+                    throw new Error("Usuário não autenticado. Faça login novamente.");
+                }
+
+                const tokenResponse = await msalInstance.acquireTokenSilent({
+                    scopes: ["User.Read"],
+                    account: accounts[0],
+                });
+
+                const updatedData = {
+                    ...data,
+                    rooms: data.rooms,
+                };
+
+                const response = await axios.post(
+                    `https://fkohtz7d4a.execute-api.sa-east-1.amazonaws.com/prod/update-event`,
+                    updatedData,
+                    {
+                        headers: {
+                            Authorization: `Bearer ${tokenResponse.accessToken}`,
+                        },
+                    }
+                );
+
+                alert("Evento atualizado com sucesso!");
+            } catch (err: any) {
+                console.error("Error updating event:", err);
+                setError(err.response ? err.response.data.message : err.message);
+            }
+        }
     };
+
+    if (!isAdmin) {
+        return <div className="p-error text-center">Você não tem permissão para acessar esta página.</div>;
+    }
+
+    if (loading) {
+        return <div>Carregando...</div>;
+    }
+
+    if (error) {
+        return (
+            <div className="error-container">
+                <h2>Erro ao carregar evento:</h2>
+                <p>{error}</p>
+            </div>
+        );
+    }
 
     return (
         <>
@@ -140,9 +258,11 @@ export default function GerenciarEvento() {
                         <label htmlFor="start_date" className="block mb-2">Data de Início</label>
                         <Calendar
                             id="start_date"
+                            name="start_date"
                             value={data.start_date}
-                            onChange={(e) => setData((prev) => ({ ...prev, start_date: e.value as Date }))}
+                            onChange={handleChange}
                             showTime
+                            hourFormat="24"
                         />
                         {errors.start_date && <small className="ml-2 p-error">{errors.start_date}</small>}
                     </div>
@@ -151,53 +271,42 @@ export default function GerenciarEvento() {
                         <label htmlFor="end_date" className="block mb-2">Data de Fim</label>
                         <Calendar
                             id="end_date"
+                            name="end_date"
                             value={data.end_date}
-                            onChange={(e) => setData((prev) => ({ ...prev, end_date: e.value as Date }))}
+                            onChange={handleChange}
                             showTime
+                            hourFormat="24"
                         />
                         {errors.end_date && <small className="ml-2 p-error">{errors.end_date}</small>}
                     </div>
 
                     <div className="form-group mb-3">
-                        <label className="block mb-2">Salas</label>
-                        {roomOrder.map((roomName, index) => (
-                            <div key={index} className="flex gap-2 mb-3 align-items-center">
+                        <label htmlFor="rooms" className="block mb-2">Salas</label>
+                        {roomOrder.map((roomName) => (
+                            <div key={roomName} className="flex">
                                 <InputText
-                                    placeholder="Nome da Sala"
+                                    className="w-full"
                                     value={roomName}
                                     onChange={(e) => handleRoomNameChange(roomName, e.target.value)}
-                                    className="w-6"
                                 />
                                 <InputText
-                                    placeholder="Capacidade"
                                     value={data.rooms[roomName]}
                                     onChange={(e) =>
-                                        handleRoomChange(roomName, parseInt(e.target.value) || 0)
+                                        handleRoomChange(roomName, Number(e.target.value))
                                     }
-                                    type="number"
-                                    className="w-3"
                                 />
                                 <Button
-                                    icon="pi pi-trash"
-                                    className="p-button-danger p-button-rounded"
+                                    className="p-button-danger"
                                     onClick={() => handleRemoveRoom(roomName)}
-                                    type="button"
+                                    icon="pi pi-times"
                                 />
                             </div>
                         ))}
-                        <Button
-                            label="Adicionar Sala"
-                            icon="pi pi-plus"
-                            className="p-button-outlined"
-                            onClick={handleAddRoom}
-                            type="button"
-                        />
+                        <Button label="Adicionar Sala" onClick={handleAddRoom} className="mt-3" />
+                        {errors.rooms && <small className="ml-2 p-error">{errors.rooms}</small>}
                     </div>
-                        {errors.rooms && <small className="p-error">{errors.rooms}</small>}
 
-                    <div className="form-group flex justify-content-end mt-4">
-                        <Button label="Salvar Evento" type="submit" />
-                    </div>
+                    <Button label="Salvar" type="submit" className="p-button-success w-full" />
                 </form>
             </div>
         </>

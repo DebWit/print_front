@@ -3,25 +3,86 @@ import { InputTextarea } from "primereact/inputtextarea";
 import { InputText } from "primereact/inputtext";
 import { FloatLabel } from "primereact/floatlabel";
 import Navbar from '@/app/components/Navbar';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from "primereact/button";
-import { useParams } from "next/navigation"; 
+import { useParams } from "next/navigation";
+import { getMsalInstance } from "../../../msalInstance";
+import axios from "axios";
 import '../style.css';
 
 export default function GerenciarNotificacao() {
-    const { id } = useParams(); 
+    const { id } = useParams();
     const [data, setData] = useState({
-        notification_id: id || "d65308fd-6940-4d6d-92b5-6247d8af834a", 
-        title: "Notificação 1",
-        description:
-            "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Laudantium perferendis fuga veritatis tempore nemo. At maiores exercitationem nihil rem doloremque suscipit dolorem, expedita, cum porro eaque dignissimos quasi eum nostrum.",
-        timestamp: 1732725960,
+        notification_id: id,
+        title: "",
+        description: "",
+        timestamp: 0,
+        has_seen: []
     });
-
     const [errors, setErrors] = useState({
         title: "",
         description: "",
     });
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState("");
+    const [isAdmin, setIsAdmin] = useState(false);  
+
+    useEffect(() => {
+        const authenticateUser = async () => {
+            try {
+                const msalInstance = await getMsalInstance();
+                const accounts = msalInstance.getAllAccounts();
+
+                if (accounts.length === 0) {
+                    throw new Error("Usuário não autenticado. Faça login novamente.");
+                }
+
+                const username = accounts[0].username.split('@')[0];
+                const isCommonUser = /^\d{2}\.\d{5}-\d$/.test(username);
+
+                if (isCommonUser) {
+                    throw new Error("Você não tem permissão para acessar esta página.");
+                }
+
+                setIsAdmin(true);
+                fetchNotification();  
+            } catch (err: any) {
+                setError(err.message);
+            }
+        };
+
+        authenticateUser();
+    }, []);
+
+    const fetchNotification = async () => {
+        try {
+            const msalInstance = await getMsalInstance();
+            const accounts = msalInstance.getAllAccounts();
+
+            const tokenResponse = await msalInstance.acquireTokenSilent({
+                scopes: ["User.Read"],
+                account: accounts[0],
+            });
+
+            const response = await axios.post(
+                `https://fkohtz7d4a.execute-api.sa-east-1.amazonaws.com/prod/get-notification`,
+                { notification_id: id },
+                {
+                    headers: {
+                        Authorization: `Bearer ${tokenResponse.accessToken}`,
+                    },
+                }
+            );
+
+            console.log("Fetched Notification:", response.data);
+            setData(response.data);
+        } catch (err: any) {
+            console.error("Error fetching notification:", err);
+            setError(err.response ? err.response.data.message : err.message);
+        } finally {
+            setLoading(false);
+        }
+    };
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
@@ -33,22 +94,76 @@ export default function GerenciarNotificacao() {
 
     const validateForm = () => {
         const newErrors: any = {};
-        
+
         if (!data.title.trim()) {
             newErrors.title = 'O título da notificação é obrigatório.';
         }
-        
+
         if (!data.description.trim()) {
             newErrors.description = 'A descrição é obrigatória.';
         }
-        
+
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
     };
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+    
+        if (!validateForm()) return;
+    
+        try {
+            const msalInstance = await getMsalInstance();
+            const accounts = msalInstance.getAllAccounts();
+    
+            if (accounts.length === 0) {
+                throw new Error("Usuário não autenticado. Faça login novamente.");
+            }
+    
+            const tokenResponse = await msalInstance.acquireTokenSilent({
+                scopes: ["User.Read"],
+                account: accounts[0],
+            });
+    
+            const updatedData = {
+                ...data,
+                creation_date: Date.now(),
+                has_seen: data.has_seen,
+            };
+    
+            const response = await axios.post(
+                `https://fkohtz7d4a.execute-api.sa-east-1.amazonaws.com/prod/update-notification`,
+                updatedData,
+                {
+                    headers: {
+                        Authorization: `Bearer ${tokenResponse.accessToken}`,
+                    },
+                }
+            );
+                
+            alert("Notificação atualizada com sucesso!");
+        } catch (err: any) {
+            console.error("Error updating notification:", err);
+            setError(err.response ? err.response.data.message : err.message);
+        }
     };
+
+    if (!isAdmin) {
+        return <div className="p-error text-center">Você não tem permissão para acessar esta página.</div>;
+    }
+
+    if (loading) {
+        return <div>Carregando...</div>;
+    }
+
+    if (error) {
+        return (
+            <div className="error-container">
+                <h2>Erro ao carregar notificação:</h2>
+                <p>{error}</p>
+            </div>
+        );
+    }
 
     return (
         <>

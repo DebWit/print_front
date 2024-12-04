@@ -1,12 +1,14 @@
 'use client';
+import { useState, useEffect } from 'react';
 import { InputTextarea } from "primereact/inputtextarea";
 import { InputText } from "primereact/inputtext";
 import { FloatLabel } from "primereact/floatlabel";
 import Navbar from '@/app/components/Navbar';
 import InputPhoto from '@/app/components/InputPhoto';
-import { useState } from 'react';
-import './style.css';
 import { Button } from "primereact/button";
+import './style.css';
+import axios from 'axios';
+import { getMsalInstance } from '../../msalInstance';
 
 export default function CriarCurso() {
     const [data, setData] = useState({
@@ -26,6 +28,36 @@ export default function CriarCurso() {
         course_photo: "",
         coordinator_photo: "",
     });
+
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState('');
+    const [isAdmin, setIsAdmin] = useState(false);
+
+    useEffect(() => {
+        const authenticateUser = async () => {
+            try {
+                const msalInstance = await getMsalInstance();
+                const accounts = msalInstance.getAllAccounts();
+
+                if (accounts.length === 0) {
+                    throw new Error("Usuário não autenticado. Faça login novamente.");
+                }
+
+                const username = accounts[0].username.split("@")[0];
+                const isCommonUser = /^\d{2}\.\d{5}-\d$/.test(username);
+
+                if (isCommonUser) {
+                    throw new Error("Você não tem permissão para acessar esta página.");
+                }
+
+                setIsAdmin(true);
+            } catch (err: any) {
+                setError(err.message);
+            }
+        };
+
+        authenticateUser();
+    }, []);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
@@ -58,9 +90,49 @@ export default function CriarCurso() {
         return Object.keys(newErrors).length === 0;
     };
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+
+        if (!validateForm()) return;
+
+        setLoading(true);
+        setError('');
+
+        try {
+            const msalInstance = await getMsalInstance();
+            const accounts = msalInstance.getAllAccounts();
+
+            if (accounts.length === 0) {
+                throw new Error("Usuário não autenticado. Faça login novamente.");
+            }
+
+            const tokenResponse = await msalInstance.acquireTokenSilent({
+                scopes: ["User.Read"],
+                account: accounts[0],
+            });
+
+            const response = await axios.post(
+                'https://fkohtz7d4a.execute-api.sa-east-1.amazonaws.com/prod/create-course',
+                { ...data },
+                {
+                    headers: {
+                        Authorization: `Bearer ${tokenResponse.accessToken}`,
+                    },
+                }
+            );
+
+            console.log('Curso criado com sucesso:', response.data);
+            alert('Curso criado com sucesso!');
+        } catch (err: any) {
+            setError(err.response ? err.response.data.message : err.message);
+        } finally {
+            setLoading(false);
+        }
     };
+
+    if (!isAdmin) {
+        return <div className="p-error text-center">Você não tem permissão para acessar esta página.</div>;
+    }
 
     return (
         <>
