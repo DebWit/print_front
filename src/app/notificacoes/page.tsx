@@ -163,7 +163,7 @@ export default function Notificacoes() {
                 onHide={() => setSidebarVisible(false)}
                 notification={selectedNotification}
             />
-            <BottomBar />
+            <BottomBar disabled={5}/>
         </>
     );
 }
