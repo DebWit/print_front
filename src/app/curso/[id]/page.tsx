@@ -10,7 +10,7 @@ export default function Curso() {
   const { id } = useParams();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [curso, setCurso] = useState(null);
+  const [curso, setCurso]:any = useState(null);
 
   useEffect(() => {
     const fetchCurso = async () => {
@@ -37,7 +37,7 @@ export default function Curso() {
         );
 
         setCurso(response.data);
-      } catch (err) {
+      } catch (err: any) {
         setError(err.response ? err.response.data.message : err.message);
       } finally {
         setLoading(false);

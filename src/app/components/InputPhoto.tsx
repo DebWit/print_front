@@ -95,7 +95,6 @@ export default function InputPhoto({ currentPhoto, onChange }: InputPhotoProps) 
                 itemTemplate={itemTemplate}
                 emptyTemplate={emptyTemplate}
                 chooseOptions={chooseOptions}
-                maxfiles={1}
             />
         </div>
     );

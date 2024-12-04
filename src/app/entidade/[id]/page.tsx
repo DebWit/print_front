@@ -12,7 +12,7 @@ export default function Entidade() {
   const { id } = useParams();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [entidade, setEntidade] = useState(null);
+  const [entidade, setEntidade]: any = useState(null);
 
   useEffect(() => {
     const fetchEntidade = async () => {
