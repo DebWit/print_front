@@ -13,17 +13,21 @@ export default function CriarEvento() {
         event_id: '',
         name: '',
         description: '',
+        banner: '',
         start_date: new Date(),
         end_date: new Date(),
         rooms: {},
+        subscribers: {}
     });
 
     const [errors, setErrors] = useState({
         name: '',
         description: '',
+        banner: '',
         start_date: '',
         end_date: '',
         rooms: '',
+        subscribers: {}
     });
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -78,6 +82,53 @@ export default function CriarEvento() {
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
+<<<<<<< Updated upstream
+=======
+
+        if (!validateForm()) return;
+
+        setLoading(true);
+        setError('');
+
+        try {
+            const msalInstance = await getMsalInstance();
+            const accounts = msalInstance.getAllAccounts();
+
+            if (accounts.length === 0) {
+                throw new Error('Usuário não autenticado. Faça login novamente.');
+            }
+
+            const tokenResponse = await msalInstance.acquireTokenSilent({
+                scopes: ['User.Read'],
+                account: accounts[0],
+            });
+
+            const response = await axios.post(
+                'https://fkohtz7d4a.execute-api.sa-east-1.amazonaws.com/prod/create-event',
+                {        
+                    event_id: '',
+                    name: formData.name,
+                    description: formData.description,
+                    banner: formData.banner,
+                    start_date: formData.start_date.getTime(),
+                    end_date: formData.end_date.getTime(),
+                    rooms: formData.rooms,
+                    subscribers: {}
+                },{
+                    headers: {
+                        Authorization: `Bearer ${tokenResponse.accessToken}`,
+                    },
+                }
+            );
+
+            console.log('Evento criado com sucesso:', response.data);
+            alert('Evento criado com sucesso!');
+        } catch (err: any) {
+            setError(err.response ? err.response.data.message : err.message);
+        } finally {
+            setLoading(false);
+        }
+>>>>>>> Stashed changes
     };
 
     return (
@@ -118,7 +169,7 @@ export default function CriarEvento() {
                         <Calendar
                             id="start_date"
                             value={formData.start_date}
-                            onChange={(e) => handleDateChange('start_date', e.value as Date)}
+                            onChange={(e) => handleDateChange('start_date',  e.value as Date)}
                             showTime
                         />
                         {errors.start_date && <small className="p-error">{errors.start_date}</small>}
