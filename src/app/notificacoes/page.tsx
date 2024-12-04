@@ -11,7 +11,7 @@ interface Notification {
     title: string;
     creation_date: number;
     description: string;
-    has_seen: boolean;
+    has_seen: string[]; // Updated to store member IDs of users who have seen the notification
 }
 
 export default function Notificacoes() {
@@ -20,20 +20,23 @@ export default function Notificacoes() {
     const [isSidebarVisible, setSidebarVisible] = useState(false);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+    const [accounts, setAccounts] = useState<any[]>([]);
 
     useEffect(() => {
-        const fetchNotificacoes = async () => {
+        const initializeMsal = async () => {
             try {
                 const msalInstance = await getMsalInstance();
-                const accounts = msalInstance.getAllAccounts();
+                const msalAccounts = msalInstance.getAllAccounts();
 
-                if (accounts.length === 0) {
+                if (msalAccounts.length === 0) {
                     throw new Error("Usuário não autenticado. Faça login novamente.");
                 }
 
+                setAccounts(msalAccounts);
+
                 const tokenResponse = await msalInstance.acquireTokenSilent({
                     scopes: ["User.Read"],
-                    account: accounts[0],
+                    account: msalAccounts[0],
                 });
 
                 const response = await axios.get(
@@ -53,19 +56,67 @@ export default function Notificacoes() {
             }
         };
 
-        fetchNotificacoes();
+        initializeMsal();
     }, []);
 
-    const handleNotificationClick = (notification: Notification) => {
+    const updateNotificationSeen = async (notification: Notification) => {
+        try {
+            const msalInstance = await getMsalInstance();
+
+            if (accounts.length === 0) {
+                throw new Error("Usuário não autenticado. Faça login novamente.");
+            }
+
+            const tokenResponse = await msalInstance.acquireTokenSilent({
+                scopes: ["User.Read"],
+                account: accounts[0],
+            });
+
+            const memberId = accounts[0].localAccountId;
+
+            await axios.post(
+                `https://fkohtz7d4a.execute-api.sa-east-1.amazonaws.com/prod/update-notification`,
+                {
+                    notification_id: notification.notification_id,
+                    has_seen: notification.has_seen.includes(memberId)
+                        ? notification.has_seen
+                        : [...notification.has_seen, memberId],
+                },
+                {
+                    headers: {
+                        Authorization: `Bearer ${tokenResponse.accessToken}`,
+                    },
+                }
+            );
+        } catch (err: any) {
+            console.error("Erro ao atualizar notificação:", err.response ? err.response.data.message : err.message);
+        }
+    };
+
+    const handleNotificationClick = async (notification: Notification) => {
+        if (accounts.length === 0) {
+            throw new Error("Usuário não autenticado.");
+        }
+
+        const memberId = accounts[0].localAccountId;
+        const updatedNotification = {
+            ...notification,
+            has_seen: notification.has_seen.includes(memberId)
+                ? notification.has_seen
+                : [...notification.has_seen, memberId],
+        };
+
         setSelectedNotification(notification);
         setSidebarVisible(true);
         setNotificacoes((prevNotificacoes) =>
             prevNotificacoes.map((notif) =>
                 notif.notification_id === notification.notification_id
-                    ? { ...notif, has_seen: true }
+                    ? updatedNotification
                     : notif
             )
         );
+
+        await updateNotificationSeen(updatedNotification);
     };
 
     const formatCreationDate = (creation_date: number): string => {
@@ -94,7 +145,9 @@ export default function Notificacoes() {
                         >
                             <div className="ml-3 lg:ml-0">
                                 <button
-                                    className={`remove-button ml-3 lg:ml-0 ${notification.has_seen ? "seen" : "unseen"}`}
+                                    className={`remove-button ml-3 lg:ml-0 ${notification.has_seen.includes(
+                                        accounts[0]?.localAccountId
+                                    ) ? "seen" : "unseen"}`}
                                 />
                                 <h3>{notification.title}</h3>
                                 <p>{formatCreationDate(notification.creation_date)}</p>
