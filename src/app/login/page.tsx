@@ -2,7 +2,6 @@
 
 import React from "react";
 import { Button } from "primereact/button";
-import axios from "axios";
 import { getMsalInstance } from "../../msalInstance";
 import { loginRequest } from "../../msalConfig";
 import "./style.css";

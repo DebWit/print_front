@@ -19,8 +19,9 @@ const getPhoto = async () => {
             });
 
             const accessToken = tokenResponse.accessToken;
+            let response
             try {
-                const response = await axios.get('https://graph.microsoft.com/v1.0/me/photo/$value', {
+                response = await axios.get('https://graph.microsoft.com/v1.0/me/photo/$value', {
                     headers: {
                         Authorization: `Bearer ${accessToken}`,
                     },
@@ -28,7 +29,7 @@ const getPhoto = async () => {
                 });
 
             } catch (error) {
-                return undefined
+                return 'https://static.vecteezy.com/system/resources/thumbnails/009/292/244/small/default-avatar-icon-of-social-media-user-vector.jpg';
             }
             
 

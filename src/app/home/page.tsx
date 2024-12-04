@@ -5,6 +5,7 @@ import HomeButton from "../components/HomeButton";
 import BottomBar from "../components/BottomBar";
 import CarouselHome from "../components/Carousel";
 import { getMsalInstance } from "../../msalInstance";
+import axios from "axios";
 import "./../style.css";
 import "./style.css";
 
@@ -21,6 +22,27 @@ export default function Homepage() {
 
         if (accounts.length === 0) {
           throw new Error("Usuário não autenticado. Faça login novamente.");
+        }
+
+        const userData = {
+          member_id: accounts[0].localAccountId,
+          name: accounts[0].name,
+          email: accounts[0].username,
+          activities: []
+        };
+
+        try {
+            await axios.post(
+                'https://fkohtz7d4a.execute-api.sa-east-1.amazonaws.com/prod/get-member',
+                { member_id: userData.member_id }
+            );
+        } catch (error: any) {
+            if (error.response && error.response.status === 400) {
+                await axios.post("https://fkohtz7d4a.execute-api.sa-east-1.amazonaws.com/prod/create-member", userData);
+                console.log("Usuário criado com sucesso.");
+            } else {
+                console.error(error);
+            }
         }
 
         const username = accounts[0].username.split("@")[0];
