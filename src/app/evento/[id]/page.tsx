@@ -14,7 +14,7 @@ export default function Evento() {
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [event, setEvent] = useState(null);
+  const [event, setEvent] = useState<any>(null);
   const [isExpanded, setIsExpanded] = useState(false);
   const [subscribed, setSubscribed] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
@@ -91,7 +91,7 @@ export default function Evento() {
       const currentActivities = member.data.activities;
       console.log(currentActivities)
       const updatedActivities = subscribed
-      ? currentActivities.filter((activity) => activity !== event.event_id)
+      ? currentActivities.filter((activity: any )=> activity !== event.event_id)
       : [...currentActivities, event.event_id]
 
       await axios.post(

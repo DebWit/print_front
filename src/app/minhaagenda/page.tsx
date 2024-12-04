@@ -15,7 +15,8 @@ export default function MinhaAgenda() {
     const [memberId, setMemberId] = useState('')
     const [items, setItems] = useState<string[]>([]);
     const [actualDay, setActualDay] = useState(-1);
-    const [events, setEvents] = useState([]);
+    const [events, setEvents] = useState([]);   
+    const [allEvents, setAllEvents] = useState([]);   
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
     setActualDayHook(setActualDay);
@@ -26,10 +27,8 @@ export default function MinhaAgenda() {
         if (dia <= 1 || dia >= 6) {
             return 0;
         }
-        return dia
+        return dia-1;
     };
-
-    let allEvents = []
 
     useEffect(() => {
         const initializeMsal = async () => {
@@ -44,17 +43,13 @@ export default function MinhaAgenda() {
 
                 const memberResponse = await axios.post('https://fkohtz7d4a.execute-api.sa-east-1.amazonaws.com/prod/get-member', { "member_id": msalAccounts[0].localAccountId })
 
-                console.log(memberResponse.data)
-                let memberEvents: any[] = []
+                let memberEvents: any = []
 
-                memberResponse.data.activities.forEach(async e => {
+                memberResponse.data.activities.forEach(async (e: any) => {
                     const eventResponse = await axios.post('https://fkohtz7d4a.execute-api.sa-east-1.amazonaws.com/prod/get-event', { "event_id": e })
-                    console.log(eventResponse)
                     memberEvents.push(eventResponse.data);
                 });
-
-                allEvents = memberEvents
-                console.log
+                setAllEvents(memberEvents)
 
                 const tokenResponse = await msalInstance.acquireTokenSilent({
                     scopes: ["User.Read"],
@@ -72,6 +67,7 @@ export default function MinhaAgenda() {
     }, []);
 
     useEffect(() => {
+        console.log(actualDay)
         const fetchEvents = async () => {
             try{
                 setLoading(true);
@@ -79,14 +75,15 @@ export default function MinhaAgenda() {
                     (event: any) => dayOfWeek(new Date(event.start_date)) === actualDay
                 );
                 setEvents(filteredEvents);
-
             }finally{
                 setLoading(false);
             }
         };
         fetchEvents();
-
-    }, [actualDay]);
+        if(actualDay === -1){
+            setTimeout(() => {setActualDay(todayDay)},500)
+        }
+    }, [actualDay, allEvents]);
 
 
     return (
@@ -102,13 +99,13 @@ export default function MinhaAgenda() {
                     ) : error ? (
                         <p className="p-error">{error}</p>
                     ) : (
-                        events.map((event, index) => (
+                        events.map((event: any, index) => (
                             <EventButton
                                 key={index}
                                 index={index + actualDay * 2}
                                 title={event.name}
-                                startTime={event.start_date}
-                                endTime={event.end_date}
+                                startTime={new Date(event.start_date).toLocaleTimeString()}
+                                endTime={new Date(event.end_date).toLocaleTimeString()}
                                 location={event.rooms}
                                 anchor={`evento/${event.event_id}`}
                             />
