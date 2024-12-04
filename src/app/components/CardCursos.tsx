@@ -2,7 +2,7 @@
 import { Card } from 'primereact/card';
 import { Button } from 'primereact/button';
 
-export default function CardPadrao({ dados }: { dados: Object }) {
+export default function CardPadrao({ dados }: { dados: any }) {
     const header = (
         <img alt="Card" src={dados.course_photo} />
     );
